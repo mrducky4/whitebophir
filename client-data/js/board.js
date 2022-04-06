@@ -67,10 +67,6 @@ if (window.location.pathname.includes("/robotboards/")) {
 	if (btn) {
 		btn.addEventListener("click", onTogglePageClick);
 	}
-	btn = document.getElementById("backButton");
-	if (btn) {
-		btn.addEventListener("click", onTogglePageClick);
-	} 
 	btn = document.getElementById("buttonBack");
 	if (btn) {
 		btn.addEventListener("click", onTogglePageClick);
