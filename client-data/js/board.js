@@ -228,6 +228,14 @@ function updateWhiteboardSnapshot() {
 	});
 }
 
+/**
+ * Remove the whiteboard snapshot from the drawing area.
+ */
+function removeWhiteboardSnapshot() {
+	elem = Tools.svg.getElementById("whiteboard_snapshot");
+	if (elem) Tools.drawingArea.removeChild(elem);
+}
+
 function onClearOverlayClick() {
 	Tools.send({type:"robotmessage", msg:"clearoverlay"},"robotTool");
 }
@@ -611,6 +619,7 @@ function messageForRobotTool(message) {
 		if (message.args.success) {
 			updateWhiteboardSnapshot();
 		} else {
+			removeWhiteboardSnapshot();
 			alert("Could not capture the whiteboard.");
 		}
 	}
