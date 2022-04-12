@@ -159,26 +159,17 @@ async function onCaptureClick() {
 	document.getElementById("canvas").style.backgroundImage = "url('background_whiteboard.jpg')";
 }*/
 function onCaptureClick() {
-	console.log("MARKD capture clicked");
-	Tools.send({type:"robotmessage", msg:"showmarkers"},"robotTool");
-	delay(1500).then(()=>{
-		Tools.send({type:"robotmessage", msg:"showblack"},"robotTool");
-		return delay(1500);
-	}).then(()=>{
-		Tools.send({type:"robotmessage", msg:"clearoverlay"},"robotTool");
-		return delay(1500);
-	}).then(()=>{
-		updateWhiteboardSnapshot();
-	});
+	console.log("capture clicked");
+	Tools.send({type:"robotmessage", msg:"getwbsnapshot"},"robotTool");
 }
 
 function onMarkersClick() {
-	console.log("MARKD markers clicked");
+	console.log("markers clicked");
 	Tools.send({type:"robotmessage", msg:"showmarkers"},"robotTool");
 }
 
 function onBlackClick() {
-	console.log("MARKD black clicked");
+	console.log("black clicked");
 	Tools.send({type:"robotmessage", msg:"showblack"},"robotTool");
 }
 
@@ -614,6 +605,13 @@ function messageForRobotTool(message) {
 			Tools.svg.style.backgroundImage = message.args.show?"url('keepout.png')":'none';
 		} else {
 			document.getElementById("keepoutImg").style.display = message.args.show?"block":"none";
+		}
+	}
+	if (m == "wbcaptured" && !Tools.robotTools.isRobotBoard()) {
+		if (message.args.success) {
+			updateWhiteboardSnapshot();
+		} else {
+			alert("Could not capture the whiteboard.");
 		}
 	}
 }
