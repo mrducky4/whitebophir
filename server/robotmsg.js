@@ -17,6 +17,8 @@ const tiltStation = 0.4;
 const zoomWhiteboard = 8;
 const zoomStation = 3;
 
+const delay = t => new Promise(resolve => setTimeout(resolve, t));
+
 async function rmsGet(api) {
     let rv;
     try {
@@ -75,7 +77,7 @@ async function handleProjectorMode(mode, boardName, socket) {
         // keep power on, but show black
         socket.broadcast.to(boardName).emit("broadcast", {
             type:"robotmessage", msg:"showblack", tool:"robotTool"
-    });
+        });
     } else if (mode === "whiteboard") {
         args.projector = "on";
         args.tilt = "up";
@@ -91,6 +93,18 @@ async function handleProjectorMode(mode, boardName, socket) {
     // to the server.
     if (restartRobotBrowser) {
         await rmsPost('/robot/browser/restart', {});
+        // wait for restart, then clear the black default image
+        delay(3000).then(()=>{
+            socket.broadcast.to(boardName).emit("broadcast", {
+                type:"robotmessage", msg:"clearoverlay", tool:"robotTool"
+            });
+            // do it again in case the robot browser was slow to restart
+            delay(3000).then(()=>{
+                socket.broadcast.to(boardName).emit("broadcast", {
+                   type:"robotmessage", msg:"clearoverlay", tool:"robotTool"
+                });
+            });
+        });
     }
 }
 
