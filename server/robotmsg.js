@@ -67,12 +67,15 @@ async function handleCamPreset(mode) {
     }
 }
 
-async function handleProjectorMode(mode) {
+async function handleProjectorMode(mode, boardName, socket) {
     let args = {};
     let restartRobotBrowser = false;
     if (mode === "home") {
-        args.projector = "off";
         args.tilt = "up";
+        // keep power on, but show black
+        socket.broadcast.to(boardName).emit("broadcast", {
+            type:"robotmessage", msg:"showblack", tool:"robotTool"
+    });
     } else if (mode === "whiteboard") {
         args.projector = "on";
         args.tilt = "up";
@@ -146,13 +149,13 @@ function handleRobotMsg(message, boardName, socket, io) {
     }
     if (message.msg === "showmarkers") {
         getSnapshotMarkers()
-            .then(val => log(`MARKD getSnapshotMarkers: ${val}`))
-            .catch(e => log(`MARKD ERROR from getSnapshotMarkers ${e}`));
+            .then(val => log(`getSnapshotMarkers: ${val}`))
+            .catch(e => log(`ERROR from getSnapshotMarkers ${e}`));
     }
     else if (message.msg === "showblack") {
         transformWhiteboardImage()
-            .then(val => log(`MARKD xform ${val}`))
-            .catch(e => log(`MARKD ERROR from xform ${e}`));
+            .then(val => log(`xform ${val}`))
+            .catch(e => log(`ERROR from xform ${e}`));
     }
     else if (message.msg === "camerapreset") {
         handleCamPreset(message.args.mode);
@@ -161,7 +164,7 @@ function handleRobotMsg(message, boardName, socket, io) {
         goToRoom(message.args.name);
     }
     else if (message.msg === "projectormode") {
-        handleProjectorMode(message.args.mode);
+        handleProjectorMode(message.args.mode, boardName, socket);
     }
     else if (message.msg === "getwbsnapshot") {
         getSnapshot(boardName, socket, io);
