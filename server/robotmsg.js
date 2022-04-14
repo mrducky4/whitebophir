@@ -17,6 +17,8 @@ const tiltStation = 0.4;
 const zoomWhiteboard = 8;
 const zoomStation = 3;
 
+const delay = t => new Promise(resolve => setTimeout(resolve, t));
+
 async function rmsGet(api) {
     let rv;
     try {
@@ -67,12 +69,15 @@ async function handleCamPreset(mode) {
     }
 }
 
-async function handleProjectorMode(mode) {
+async function handleProjectorMode(mode, boardName, socket) {
     let args = {};
     let restartRobotBrowser = false;
     if (mode === "home") {
-        args.projector = "off";
         args.tilt = "up";
+        // keep power on, but show black
+        socket.broadcast.to(boardName).emit("broadcast", {
+            type:"robotmessage", msg:"showblack", tool:"robotTool"
+        });
     } else if (mode === "whiteboard") {
         args.projector = "on";
         args.tilt = "up";
@@ -88,6 +93,18 @@ async function handleProjectorMode(mode) {
     // to the server.
     if (restartRobotBrowser) {
         await rmsPost('/robot/browser/restart', {});
+        // wait for restart, then clear the black default image
+        delay(3000).then(()=>{
+            socket.broadcast.to(boardName).emit("broadcast", {
+                type:"robotmessage", msg:"clearoverlay", tool:"robotTool"
+            });
+            // do it again in case the robot browser was slow to restart
+            delay(3000).then(()=>{
+                socket.broadcast.to(boardName).emit("broadcast", {
+                   type:"robotmessage", msg:"clearoverlay", tool:"robotTool"
+                });
+            });
+        });
     }
 }
 
@@ -146,13 +163,13 @@ function handleRobotMsg(message, boardName, socket, io) {
     }
     if (message.msg === "showmarkers") {
         getSnapshotMarkers()
-            .then(val => log(`MARKD getSnapshotMarkers: ${val}`))
-            .catch(e => log(`MARKD ERROR from getSnapshotMarkers ${e}`));
+            .then(val => log(`getSnapshotMarkers: ${val}`))
+            .catch(e => log(`ERROR from getSnapshotMarkers ${e}`));
     }
     else if (message.msg === "showblack") {
         transformWhiteboardImage()
-            .then(val => log(`MARKD xform ${val}`))
-            .catch(e => log(`MARKD ERROR from xform ${e}`));
+            .then(val => log(`xform ${val}`))
+            .catch(e => log(`ERROR from xform ${e}`));
     }
     else if (message.msg === "camerapreset") {
         handleCamPreset(message.args.mode);
@@ -161,7 +178,7 @@ function handleRobotMsg(message, boardName, socket, io) {
         goToRoom(message.args.name);
     }
     else if (message.msg === "projectormode") {
-        handleProjectorMode(message.args.mode);
+        handleProjectorMode(message.args.mode, boardName, socket);
     }
     else if (message.msg === "getwbsnapshot") {
         getSnapshot(boardName, socket, io);
