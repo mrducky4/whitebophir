@@ -806,8 +806,10 @@ Tools.toolHooks = [
 
 		function compile(listener) { //closure
 			return (function listen(evt) {
-				var x = evt.pageX / Tools.getScale(),
-					y = evt.pageY / Tools.getScale();
+				// get coordinates relative to the svg canvas area
+				var rect = Tools.svg.getBoundingClientRect();
+				var x = (evt.clientX-rect.left) / Tools.getScale(),
+					y = (evt.clientY-rect.top) / Tools.getScale();
 				return listener(x, y, evt, false);
 			});
 		}
