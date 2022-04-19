@@ -806,8 +806,10 @@ Tools.toolHooks = [
 
 		function compile(listener) { //closure
 			return (function listen(evt) {
-				var x = evt.pageX / Tools.getScale(),
-					y = evt.pageY / Tools.getScale();
+				// get coordinates relative to the svg canvas area
+				var rect = Tools.svg.getBoundingClientRect();
+				var x = (evt.clientX-rect.left) / Tools.getScale(),
+					y = (evt.clientY-rect.top) / Tools.getScale();
 				return listener(x, y, evt, false);
 			});
 		}
@@ -817,9 +819,11 @@ Tools.toolHooks = [
 				//Currently, we don't handle multitouch
 				if (evt.changedTouches.length === 1) {
 					//evt.preventDefault();
+					// get coordinates relative to the svg canvas area
+					var rect = Tools.svg.getBoundingClientRect();
 					var touch = evt.changedTouches[0];
-					var x = touch.pageX / Tools.getScale(),
-						y = touch.pageY / Tools.getScale();
+					var x = (touch.clientX-rect.left) / Tools.getScale(),
+						y = (touch.clientY-rect.top) / Tools.getScale();
 					return listener(x, y, evt, true);
 				}
 				return true;
