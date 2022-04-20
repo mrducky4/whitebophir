@@ -56,6 +56,10 @@
         "mouseCursor": "crosshair",
     }
 
-    Tools.add(clearTool);
+    // Tools.add(clearTool);
+    btn = document.getElementById("clearAll");
+	if (btn) {
+		btn.addEventListener("click", btnClickHandler);
+	}
 
 })(); 

@@ -101,18 +101,22 @@
 					</div>
 				</div>
 				
-				<div id="robotButtons">
-					<button id="buttonCapture" type="button" style="cursor:pointer">Capture</button>
-					<button id="buttonMarkers" type="button" style="cursor:pointer">Markers</button>
-					<button id="buttonBlack" type="button" style="cursor:pointer">Black</button>
-					<button id="buttonClearOverlay" type="button" style="cursor:pointer">Drawing</button>
-					<button id="buttonToggleBgnd" type="button" style="cursor:pointer">Toggle Bgnd</button>
+				<div id="robotButtons" style="text-align: center;" >
+					<button id="buttonCapture" type="button" class="boardButtons">Capture</button>
+					<button id="uploadFile" type="button" class="boardButtons">Show a file</button>
+					<button id="download" type="button" class="boardButtons">Save</button>
+					<button id="clearAll" type="button" class="boardButtons">Clear all</button>
+					<button id="buttonMarkers" type="button" class="boardButtons devTools">Markers</button>
+					<button id="buttonBlack" type="button" class="boardButtons devTools">Black</button>
+					<button id="buttonClearOverlay" type="button" class="boardButtons devTools">Drawing</button>
+					<button id="buttonToggleBgnd" type="button" class="boardButtons devTools">Toggle Bgnd</button>
+					
 				</div>
 				<div id="loadingMessage">{{translations.loading}}</div>
 
 			</div>
 			<div id="backButtonDiv">
-				<button id="buttonBack" type="button" style="cursor:pointer">< Back</button>
+				<button id="buttonBack" type="button" style="cursor:pointer; height: 3em;">< Back</button>
 			</div>
 			
 		</div>
@@ -131,10 +135,10 @@
 	<script src="../tools/pencil/wbo_pencil_point.js"></script>
 	<script src="../tools/pencil/pencil.js"></script>
 	<script src="../tools/cursor/cursor.js"></script>
-	<script src="../tools/line/line.js"></script>
+	<!-- <script src="../tools/line/line.js"></script>
 	<script src="../tools/rect/rect.js"></script>
-	<script src="../tools/ellipse/ellipse.js"></script>
-	<script src="../tools/text/text.js"></script>
+	<script src="../tools/ellipse/ellipse.js"></script> -->
+	<!-- <script src="../tools/text/text.js"></script> -->
 	<script src="../tools/eraser/eraser.js"></script>
 	<script src="../tools/document/document.js"></script>
 	<script src="../tools/clear/clear.js"></script>

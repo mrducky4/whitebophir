@@ -5,6 +5,17 @@ html, body, svg {
     overflow: hidden;
 }
 
+button{
+	align-self: center;
+	border-radius: 15px;
+	background-color: #1b1b1b !important;
+	color: #81CA00 !important;
+	font-size: 1em;
+	cursor:pointer;
+}
+input:disabled, textarea:disabled {
+	opacity: 1;
+	}
 #canvas {
 	transform-origin: 0 0;
 }
@@ -64,6 +75,9 @@ html, body, svg {
 
 #robotButtons {
 	padding: 0px 10px;
+}
+#robotButtons .devTools{
+	display: none !important;
 }
 
 #menu {
@@ -129,14 +143,14 @@ html, body, svg {
 	height: 40px;
 	line-height: 40px;
 	border-radius: 0px;
-	max-width: 40px;
+	/* max-width: 40px; */
 	transition-duration: .2s;
 	overflow: hidden;
 	width: max-content;
 	box-shadow: inset 0 0 3px #8FA2BC;
 }
 
-#menu .tool:hover {
+/* #menu .tool:hover {
 	max-width: 100%;
 }
 
@@ -147,7 +161,7 @@ html, body, svg {
 
 	#menu .tool:focus {
 		max-width: 100%;
-	}
+	} */
 
 	#menu {
 		pointer-events: auto;
@@ -195,9 +209,9 @@ html, body, svg {
 
 #menu .tool-name {
 	text-align: center;
-	font-size: 23px;
+	font-size: 1em;
 	margin-right: 20px;
-	margin-left: 20px;
+	/* margin-left: 20px; */
 	margin-bottom: 2.5px;
 	display: inline-block;
 	vertical-align: text-bottom;
@@ -382,12 +396,10 @@ circle.opcursor {
 }*/
 .homePageButtons{
 	height: 4em;
-	align-self: center;
-	border-radius: 15px;
-	background-color: #1b1b1b !important;
-	color: #81CA00 !important;
-	font-size: 1em;
-	cursor:pointer;
+} 
+.boardButtons{
+	height: 3em;
+	width: 10%;
 } 
 
 .lang-selector li:hover {
@@ -423,4 +435,6 @@ circle.opcursor {
 #footerBar{
 	bottom: 2%;
 	position: fixed;
+	text-align: center;
+	width: 100%;
 }
