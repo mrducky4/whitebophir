@@ -896,11 +896,12 @@ Tools.colorPresets = [
 	{ color: "#FF851B", key: '4' },
 	{ color: "#FFDC00", key: '5' },
 	{ color: "#3D9970", key: '6' },
-	{ color: "#91E99B", key: '7' },
-	{ color: "#90468b", key: '8' },
-	{ color: "#7FDBFF", key: '9' },
-	{ color: "#AAAAAA", key: '0' },
-	{ color: "#E65194" }
+	// { color: "#91E99B", key: '7' },
+	// { color: "#90468b", key: '8' },
+	// { color: "#7FDBFF", key: '9' },
+	// { color: "#AAAAAA", key: '0' },
+	// { color: "#E65194" }
+	{ color: "#90468b", key: '7' },
 ];
 
 Tools.color_chooser = document.getElementById("chooseColor");
