@@ -135,13 +135,13 @@
         Tools.drawingArea.appendChild(img);
     }
 
-    // Tools.add({
-    //     "name": toolName,
-    //     "draw": draw,
-    //     "onstart": onstart,
-    //     "oneTouch":true,
-    //     "icon": "/tools/document/icon.svg",
-    // });
+    Tools.add({
+        "name": toolName,
+        "draw": draw,
+        "onstart": onstart,
+        "oneTouch":true,
+        "icon": "/tools/document/icon.svg",
+    });
 
     btn = document.getElementById("uploadFile");
 	if (btn) {
