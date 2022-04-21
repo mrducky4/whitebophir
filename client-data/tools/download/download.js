@@ -69,15 +69,15 @@
         }
     }
 
-    // Tools.add({ //The new tool
-    //     "name": "Download",
-    //     "shortcut": "d",
-    //     "listeners": {},
-    //     "icon": "tools/download/download.svg",
-    //     "oneTouch": true,
-    //     "onstart": downloadSVGFile,
-    //     "mouseCursor": "crosshair",
-    // });
+    Tools.add({ //The new tool
+        "name": "Download",
+        "shortcut": "d",
+        "listeners": {},
+        "icon": "tools/download/download.svg",
+        "oneTouch": true,
+        "onstart": downloadSVGFile,
+        "mouseCursor": "crosshair",
+    });
     btn = document.getElementById("download");
 	if (btn) {
 		btn.addEventListener("click", downloadSVGFile);

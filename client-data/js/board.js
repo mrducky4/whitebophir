@@ -115,6 +115,7 @@ if (window.location.pathname.includes("/robotboards/")) {
 	if (Tools.robotTools.isRobotBoard()) {
 		Tools.svg.style.backgroundImage = "url('keepout.png')";
 	}
+	
 })();
 
 function onTogglePageClick(e) {
@@ -351,33 +352,35 @@ Tools.HTML = {
 		});
 	},
 	addTool: function (toolName, toolIcon, toolIconHTML, toolShortcut, oneTouch) {
-		var callback = function () {
-			Tools.change(toolName);
-		};
-		this.addShortcut(toolShortcut, function () {
-			Tools.change(toolName);
-			document.activeElement.blur && document.activeElement.blur();
-		});
-		return this.template.add(function (elem) {
-			elem.addEventListener("click", callback);
-			elem.id = "toolID-" + toolName;
-			elem.getElementsByClassName("tool-name")[0].textContent = Tools.i18n.t(toolName);
-			var toolIconElem = elem.getElementsByClassName("tool-icon")[0];
-			toolIconElem.src = toolIcon;
-			toolIconElem.alt = toolIcon;
-			if (oneTouch) elem.classList.add("oneTouch");
-			elem.title =
-				Tools.i18n.t(toolName) + " (" +
-				Tools.i18n.t("keyboard shortcut") + ": " +
-				toolShortcut + ")" +
-				(Tools.list[toolName].secondary ? " [" + Tools.i18n.t("click_to_toggle") + "]" : "");
-			if (Tools.list[toolName].secondary) {
-				elem.classList.add('hasSecondary');
-				var secondaryIcon = elem.getElementsByClassName('secondaryIcon')[0];
-				secondaryIcon.src = Tools.list[toolName].secondary.icon;
-				toolIconElem.classList.add("primaryIcon");
-			}
-		});
+		if ((toolName !== 'Clear') && (toolName !== 'Image') && (toolName !== 'Download')){
+			var callback = function () {
+				Tools.change(toolName);
+			};
+			this.addShortcut(toolShortcut, function () {
+				Tools.change(toolName);
+				document.activeElement.blur && document.activeElement.blur();
+			});
+			return this.template.add(function (elem) {
+				elem.addEventListener("click", callback);
+				elem.id = "toolID-" + toolName;
+				elem.getElementsByClassName("tool-name")[0].textContent = Tools.i18n.t(toolName);
+				var toolIconElem = elem.getElementsByClassName("tool-icon")[0];
+				toolIconElem.src = toolIcon;
+				toolIconElem.alt = toolIcon;
+				if (oneTouch) elem.classList.add("oneTouch");
+				elem.title =
+					Tools.i18n.t(toolName) + " (" +
+					Tools.i18n.t("keyboard shortcut") + ": " +
+					toolShortcut + ")" +
+					(Tools.list[toolName].secondary ? " [" + Tools.i18n.t("click_to_toggle") + "]" : "");
+				if (Tools.list[toolName].secondary) {
+					elem.classList.add('hasSecondary');
+					var secondaryIcon = elem.getElementsByClassName('secondaryIcon')[0];
+					secondaryIcon.src = Tools.list[toolName].secondary.icon;
+					toolIconElem.classList.add("primaryIcon");
+				}
+			});
+		}
 	},
 	changeTool: function (oldToolName, newToolName) {
 		var oldTool = document.getElementById("toolID-" + oldToolName);
