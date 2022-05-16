@@ -1,4 +1,4 @@
-const { getSnapshotMarkers, transformWhiteboardImage } = require("./robotimage.js")
+const { getSnapshotMarkers, getSnapshotPlain, transformWhiteboardImage } = require("./robotimage.js")
 const request = require('request-promise-native')
 const log = require("./log.js").log
 
@@ -151,6 +151,28 @@ function getSnapshot(boardName, socket, io) {
     });
 }
 
+/**
+ * Orchestrate the plain snapshot capture process.
+ * @param {string} boardName name of the whiteboard
+ * @param {*} socket the triggering message came in on, from the client
+ * @param {*} io sockets.io object
+ */
+function getSnapshotFromCam(boardName, socket, io) {
+    getSnapshotPlain() // get image with projected alignment marks
+    .then((val) => {
+        log(`getSnapshotPlain: ${val}`);
+        io.in(boardName).emit("broadcast", {
+            type:"robotmessage", msg:"plaincaptured", args:{success:true}, tool:"robotTool"
+        });
+    })
+    .catch(e => {
+        log(`ERROR getSnapshotPlain ${e}`);
+        io.in(boardName).emit("broadcast", {
+            type:"robotmessage", msg:"plaincaptured", args:{success:false}, tool:"robotTool"
+        });
+    });
+}
+
 async function goToRoom(room) {
     await rmsPost('/robot/tel/goToRoom', {name:room});
 }
@@ -182,6 +204,9 @@ function handleRobotMsg(message, boardName, socket, io) {
     }
     else if (message.msg === "getwbsnapshot") {
         getSnapshot(boardName, socket, io);
+    }
+    else if (message.msg === "getplainsnapshot") {
+        getSnapshotFromCam(boardName, socket, io);
     }
 }
 
