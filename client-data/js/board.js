@@ -121,6 +121,7 @@ if (window.location.pathname.includes("/robotboards/")) {
 function onTogglePageClick(e) {
 	let id = e.target.id;
 	let mode;
+	let showKeepout;
 	console.log(`page toggle clicked: ${id}`);
 	if(id =="buttonBack"){
 		console.log("Show home page");
@@ -133,12 +134,17 @@ function onTogglePageClick(e) {
 		document.getElementById("boardContainer").style.display = "grid";
 		if (id === "collabWhiteboard") {
 			mode = "whiteboard";
+			Tools.robotTools.whiteboard_mode = true;
+			showKeepout = true;
 		} else {
 			mode = "station"
+			Tools.robotTools.whiteboard_mode = false;
+			showKeepout = false;
 		}
 	}
 	Tools.robotTools.cameraPreset(mode);
 	Tools.robotTools.projectorMode(mode);
+	Tools.robotTools.showKeepout(showKeepout);
 }
 
 // set scale to fit the board width to the window width

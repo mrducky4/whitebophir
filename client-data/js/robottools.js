@@ -46,6 +46,10 @@ RobotTools.goToRoom = function (room) {
  * @param {bool} show 
  */
 RobotTools.showKeepout = function (show) {
+    // never show keepouts if not in whiteboard mode
+    if (!RobotTools.whiteboard_mode) show = false;
     document.getElementById("keepoutImg").style.display = show?"block":"none";
     RobotTools.send("showkeepout", {show:show});
 };
+
+RobotTools.whiteboard_mode = false; //true if using whiteboard annotation

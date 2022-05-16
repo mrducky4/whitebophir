@@ -20,6 +20,14 @@ function getSnapshotMarkers() {
 	});
 }
 
+function getSnapshotPlain() {
+	return new Promise( (resolve, reject) => {
+		exec("./get_snapshot_plain.sh", (error, stdout, stderr) => {
+			if (error) reject(error.message);
+			else resolve(stdout);
+		});
+	});
+}
 
 function transformWhiteboardImage() {
 	return new Promise( (resolve, reject) => {
@@ -30,4 +38,4 @@ function transformWhiteboardImage() {
 	});
 }
 
-module.exports = { pwd, getSnapshotMarkers, transformWhiteboardImage };
+module.exports = { pwd, getSnapshotMarkers, getSnapshotPlain, transformWhiteboardImage };
