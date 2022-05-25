@@ -192,14 +192,14 @@ function handleRobotMsg(message, boardName, socket, io) {
         log("robotmessage", message);
     }
     if (message.msg === "showmarkers") {
-        getSnapshotMarkers()
-            .then(val => log(`getSnapshotMarkers: ${val}`))
-            .catch(e => log(`ERROR from getSnapshotMarkers ${e}`));
+        //getSnapshotMarkers()
+        //    .then(val => log(`getSnapshotMarkers: ${val}`))
+        //    .catch(e => log(`ERROR from getSnapshotMarkers ${e}`));
     }
     else if (message.msg === "showblack") {
-        transformWhiteboardImage()
-            .then(val => log(`xform ${val}`))
-            .catch(e => log(`ERROR from xform ${e}`));
+        //transformWhiteboardImage()
+        //    .then(val => log(`xform ${val}`))
+        //    .catch(e => log(`ERROR from xform ${e}`));
     }
     else if (message.msg === "camerapreset") {
         handleCamPreset(message.args.mode);
