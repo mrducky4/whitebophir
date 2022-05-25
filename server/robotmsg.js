@@ -98,11 +98,19 @@ async function handleProjectorMode(mode, boardName, socket) {
             socket.broadcast.to(boardName).emit("broadcast", {
                 type:"robotmessage", msg:"clearoverlay", tool:"robotTool"
             });
+            if (mode === "station")
+                socket.broadcast.to(boardName).emit("broadcast", {
+                    type:"robotmessage", msg:"showkeepout", args:{show:false}, tool:"robotTool"
+                });
             // do it again in case the robot browser was slow to restart
             delay(3000).then(()=>{
                 socket.broadcast.to(boardName).emit("broadcast", {
                    type:"robotmessage", msg:"clearoverlay", tool:"robotTool"
                 });
+                if (mode === "station")
+                    socket.broadcast.to(boardName).emit("broadcast", {
+                        type:"robotmessage", msg:"showkeepout", args:{show:false}, tool:"robotTool"
+                    });
             });
         });
     }
