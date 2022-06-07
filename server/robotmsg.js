@@ -169,21 +169,21 @@ function getSnapshotFromCam(boardName, socket, io) {
     getSnapshotPlain() // get image with projected alignment marks
     .then((val) => {
         log(`getSnapshotPlain: ${val}`);
-        //io.in(boardName).emit("broadcast", {
-        //    type:"robotmessage", msg:"plaincaptured", args:{success:true}, tool:"robotTool"
-        //});
-        // Send event message back to only the client that asked for the capture
+        // Send event messages back to only the client that asked for the capture
         socket.emit("broadcast", {
             type:"robotmessage", msg:"plaincaptured", args:{success:true}, tool:"robotTool"
         });
     })
     .catch(e => {
         log(`ERROR getSnapshotPlain ${e}`);
-        //io.in(boardName).emit("broadcast", {
-        //    type:"robotmessage", msg:"plaincaptured", args:{success:false}, tool:"robotTool"
-        //});
         socket.emit("broadcast", {
             type:"robotmessage", msg:"plaincaptured", args:{success:false}, tool:"robotTool"
+        });
+    })
+    .finally(()=>{
+        // tell the robot board to clear the black image
+        socket.broadcast.to(boardName).emit("broadcast", {
+            type:"robotmessage", msg:"clearoverlay", tool:"robotTool"
         });
     });
 }
