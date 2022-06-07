@@ -205,6 +205,43 @@ function getDataURLfromFile(fileurl, callback) {
 }
 
 /**
+ * Fetch the plain snapshot from the robot's camera. The file URL
+ * is hardcoded, always the same for now.
+ * Convert the image into a dataURL.
+ * Load the image into the board using the Image tool, just like loading
+ * an image from a local file.
+ */
+function loadPlainSnapshot() {
+	// Use a unique number to make sure the image isn't cached anywhere
+	const num = new Date().getTime();
+	const imageurl = `snapshot_plain.jpg?unique=${num}`;
+	getDataURLfromFile(imageurl, (dataurl) => {
+		//TODO Possibly refactor this to use the same code as in document.js.
+		//TODO This is a hack to load a new image as if this is part of the 
+		//TODO 'Image' tool in document.js.
+		let size = dataurl.length;
+		if (size > Tools.server_config.MAX_DOCUMENT_SIZE) {
+			//TODO reduce the image size, possibly same way as document.js does it
+			alert("Image too large.");
+		} else {
+			var uid = Tools.generateUID("doc"); // doc for document
+			console.log(`load image size:${size} type:${dataurl.substring(0, dataurl.indexOf(';'))}`);
+			var msg = {
+				id: uid,
+				type: "doc",
+				data: dataurl,
+				size: size,
+				filename: 'snapshot_plain.jpg', //for logging on server side
+				filetype: '.jpg', //for logging on server side
+				w: 1920,  //assume the snapshot from the robot is always this size
+				h: 1080,
+			};
+			Tools.drawAndSend(msg, Tools.list.Image);
+		}
+	});
+}
+
+/**
  * Fetch the latest whiteboard snapshot from the server. Put the image into
  * our local svg drawing area as a dataURL so it is included in the downloaded
  * SVG file when the user clicks the download button.
@@ -633,6 +670,14 @@ function messageForRobotTool(message) {
 			toggleLoadingImg(false);
 			removeWhiteboardSnapshot();
 			alert("Could not capture the whiteboard.");
+		}
+	}
+	if (m == "plaincaptured" && !Tools.robotTools.isRobotBoard()) {
+		toggleLoadingImg(false);
+		if (message.args.success) {
+			loadPlainSnapshot();
+		} else {
+			alert("Could not capture the image.");
 		}
 	}
 }
