@@ -27,6 +27,7 @@
 const delay = t => new Promise(resolve => setTimeout(resolve, t));
 
 var Tools = {};
+var mode="home";
 
 Tools.i18n = (function i18n() {
 	var translations = JSON.parse(document.getElementById("translations").text);
@@ -120,7 +121,7 @@ if (window.location.pathname.includes("/robotboards/")) {
 
 function onTogglePageClick(e) {
 	let id = e.target.id;
-	let mode;
+	//let mode;
 	let showKeepout;
 	console.log(`page toggle clicked: ${id}`);
 	if(id =="buttonBack"){
@@ -132,14 +133,17 @@ function onTogglePageClick(e) {
 		console.log("Show board");
 		document.getElementById("homePageContainer").style.display = "none";
 		document.getElementById("boardContainer").style.display = "grid";
+		
 		if (id === "collabWhiteboard") {
 			mode = "whiteboard";
 			Tools.robotTools.whiteboard_mode = true;
 			showKeepout = true;
+			document.getElementById("buttonCapture").innerHTML = 'Capture';
 		} else {
 			mode = "station"
 			Tools.robotTools.whiteboard_mode = false;
 			showKeepout = false;
+			document.getElementById("buttonCapture").innerHTML = 'Snapshot';
 		}
 	}
 	Tools.robotTools.cameraPreset(mode);
@@ -167,8 +171,32 @@ async function onCaptureClick() {
 }*/
 function onCaptureClick() {
 	console.log("capture clicked");
+	if(mode=="whiteboard"){
+		getWbSnapshot();
+	} else if (mode=="station"){
+		startPlainSnapshot();
+	}
+}
+
+function getWbSnapshot(){
 	toggleLoadingImg(true);
 	Tools.send({type:"robotmessage", msg:"getwbsnapshot"},"robotTool");
+}
+
+function startPlainSnapshot(){
+	
+	if (!window.confirm("Delete this board, and proceed to take snapshot from robot's camera?")) return;
+	
+	Tools.drawAndSend({'type': 'deleteall',},Tools.list.Clear);
+	Tools.send({type:"robotmessage", msg:"showblack"},"robotTool");
+	setTimeout(getPlainSnapshot, 250);
+}
+
+
+function getPlainSnapshot(){
+	if (!window.confirm("As local user to place an object in front of camera and click OK to take a snapshot.")) return;
+		toggleLoadingImg(true);
+		Tools.send({type:"robotmessage", msg:"getplainsnapshot"},"robotTool");
 }
 
 function onMarkersClick() {
