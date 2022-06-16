@@ -27,7 +27,6 @@
 const delay = t => new Promise(resolve => setTimeout(resolve, t));
 
 var Tools = {};
-var mode="home";
 
 Tools.i18n = (function i18n() {
 	var translations = JSON.parse(document.getElementById("translations").text);
@@ -121,7 +120,7 @@ if (window.location.pathname.includes("/robotboards/")) {
 
 function onTogglePageClick(e) {
 	let id = e.target.id;
-	//let mode;
+	let mode;
 	let showKeepout;
 	console.log(`page toggle clicked: ${id}`);
 	if(id =="buttonBack"){
@@ -171,9 +170,9 @@ async function onCaptureClick() {
 }*/
 function onCaptureClick() {
 	console.log("capture clicked");
-	if(mode=="whiteboard"){
+	if(Tools.robotTools.whiteboard_mode){
 		getWbSnapshot();
-	} else if (mode=="station"){
+	} else{
 		startPlainSnapshot();
 	}
 }
@@ -189,12 +188,13 @@ function startPlainSnapshot(){
 	
 	Tools.drawAndSend({'type': 'deleteall',},Tools.list.Clear);
 	Tools.send({type:"robotmessage", msg:"showblack"},"robotTool");
+	//Add 250ms timer so that user can see board getting deleted(as per earlier prompt) before showing new prompt.
 	setTimeout(getPlainSnapshot, 250);
 }
 
 
 function getPlainSnapshot(){
-	if (!window.confirm("As local user to place an object in front of camera and click OK to take a snapshot.")) return;
+	if (!window.confirm("Ask local user to place an object in front of camera and click OK to take a snapshot.")) return;
 		toggleLoadingImg(true);
 		Tools.send({type:"robotmessage", msg:"getplainsnapshot"},"robotTool");
 }
