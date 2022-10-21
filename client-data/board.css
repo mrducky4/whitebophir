@@ -330,12 +330,12 @@ circle.opcursor {
 	height: 100vh;
 	overflow: hidden !important;
 }
-#homePageContainer{
+#avaLogoPageContainer{
 	display: grid;
 	width: 100%;
 	height: 100%;
 	grid-template-columns: 1fr 1fr;
-	grid-template-rows: 1fr 8fr;
+	grid-template-rows: 3fr 6fr;
 	overflow: hidden !important;
 	background-color: black;
 	position: fixed;
@@ -346,7 +346,7 @@ circle.opcursor {
 	grid-area: 1 / 1 / 2 / 3; 
 }
 #logoImg{
-	width: 55vh;
+	width: 150px;
 	margin-top: 1.5%;
 	align-self: center;
 	justify-self: center;
@@ -355,21 +355,23 @@ circle.opcursor {
 	display: grid;
 	grid-area: 2 / 1 / 3 / 2; 
 }
-#collaborationContainer{
+#inputContainer{
 	display: grid;
-	grid-area: 2 / 2 / 3 / 3; 
+	grid-area: 2 / 1 / 3 / 4; 
 	/* grid-template-columns: 1fr 1fr;
 	grid-template-rows: 0.35fr 0.65fr; */
+	align-self: baseline;
+   
+  justify-content: center;
+
 }
 .containerDiv{
 	display: grid;
-	grid-template-rows: 1fr 5fr;
-	grid-template-columns: 1fr 5fr 1fr;
-	width: 98%;
-	height: 98%;
-	/* background: #212121; */
+	grid-template-rows: 1fr 1fr 1fr;
+	grid-template-columns: 1fr 4fr 1fr;
+	width: 70vh;
+	height: 50vh;
 	background-color: #333333;
-	margin: 1%;
 	border-radius: 5%;
 	
 }
@@ -381,8 +383,8 @@ circle.opcursor {
 }
 .buttonsListDiv{
 	display: grid;
-	grid-area: 2 / 2 / 3 / 3; 
-	grid-template-rows: 1fr 1fr 1fr 1fr;
+	grid-area: 1 / 2 / 4 / 3; 
+	grid-template-rows: 1fr  1fr 1fr 1fr 1fr;
 }
 /* #destinationListDiv{
 	display: grid;
@@ -395,7 +397,7 @@ circle.opcursor {
 	grid-template-rows: 1fr 1fr;
 }*/
 .homePageButtons{
-	height: 4em;
+	height: 6em;
 } 
 .boardButtons{
 	height: 3em;
