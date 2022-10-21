@@ -1,201 +1,394 @@
-html {
-	background: linear-gradient(135deg, #c4dfffa0, transparent), url(background.png);
-	width:100%;
-	min-height: 100%;
-	margin:0;
-	font-family: sans-serif;
-	font-weight: 300;
-	font-size: 15px;
-}
-
 body {
-	position: absolute;
-	display: flex;
-	flex-direction: column;
-	min-height: 100%;
-	margin: 0;
-	width: 100%;
+	margin-top:0;
+	margin-left:5px;
+	font-family: Verdana, Arial, sans-serif;
+	/* color:#cccccc; */
+	color:#808080;
+	background-color:black;
+	font-size:1em;
+	-webkit-touch-callout: none !important;		/* disable context menus on touch devices */
 }
 
-header {
-	position:fixed;
-	left:0;
-	top:0;
-	text-shadow: 1px 1px 2px #eee;
-	width:100%;
-	z-index: 2;
+/* scrollbars (see DE2400) */
+body::-webkit-scrollbar, #roomListDiv::-webkit-scrollbar {
+	width: 1em;
+}
+body::-webkit-scrollbar-arrow-color, #roomListDiv::-webkit-scrollbar-arrow-color {
+	width: 1em;
+}
+body::-webkit-scrollbar-track, #roomListDiv::-webkit-scrollbar-track {
+	background-color: #383333;
+	-webkit-box-shadow: inset 0 0 6px rgba(122, 122, 122, 0.3);
+	border: 1px solid rgb(68, 68, 68);
+	border-radius: 3px;
+}
+body::-webkit-scrollbar-thumb, #roomListDiv::-webkit-scrollbar-thumb {
+	background-color: rgb(179, 179, 179);
+	border-radius: 2px;
+	border: 2px solid rgb(142, 142, 142);
 }
 
-h1, h2 {
-	text-align: center;
-	font-weight: 300;
+a, .clickable, .ui-datepicker-trigger, a.arrowLink {
+	color:#81CA00 !important;
+	text-decoration:none;
+	cursor:pointer;
 }
 
-h3 {
-	font-weight: 400;
+a:hover, .clickable:hover, .ui-datepicker-trigger:hover {
+	opacity:.75;
 }
 
-main {
-	margin: auto;
-	margin-top: 80px;
-	width:100%;
-	max-width: 1250px;
-	font-size: 1.1em;
+ul li {
+	padding:.8em;
+}
+
+li img {
+	vertical-align:baseline;
+}
+
+.grayscale {
+	filter: grayscale(100%);
+	-moz-filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale");
+    -o-filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale");
+    -webkit-filter: grayscale(100%);
+}
+
+/************************ PAGE LAYOUT **************************/
+#outer-container {
+	max-width:80%;
+	max-width:500px;
+	text-align:center;
+	margin-left:auto;
+	margin-right:auto;
 	position:relative;
-	text-align:justify;
-	transition:.1s;
-	display:flex;
-	flex-wrap: wrap;
-	justify-content: space-around; 
+	/* box-shadow: 0px 0px 80px #353131; */
+	margin-bottom:40px;
+	/* border: 1px solid #1F1F1F;	/* need a border for monitors that don't display drop shadows or gray gradients  very well */ */
 }
 
-#description,
-#recent-boards {
-	flex: 100%;
+#page-container {
+	height:100%;
+	min-height:500px; 
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	padding:40px;
 }
 
-main>div {
-	margin:15px;
-	min-width: 250px;
-	padding:35px;
-	transition:.07s;
-	flex:33%;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	border-radius: .2em;
-}
+/************************ HEADERS & HEADINGS **************************/
 
-main>div:hover {
-	transform:scale(1.03);
-}
-
-header, main>div {
-	box-shadow: 2px 2px 10px #666;
-	background-color:#fff;
-}
-
-header:hover h2 {
-	animation:colorchange 100s infinite;
-}
-
-.wbo-button {
-	white-space: nowrap;
-	text-decoration: none;
-	background: linear-gradient(#C4DFFF, #8FA2BC);
-	margin-top: 15px;
-	line-height: 60px;
-	border-radius: 5px;
-	box-shadow:  1px 1px 3px #555;
-	display: block;
-	text-align: center;
-	color: black;
-	transition: .1s;
-}
-
-a{
-	color: black;
-}
-
-.wbo-button:hover{
-		box-shadow: 0 0 5px #0074D9;
-}
-
-.wbo-button:focus, .wbo-button:active {
-	box-shadow: inset 1px 1px 5px #555;
-}
-
-input {
-	line-height: 20px;
-	border-radius: 5px;
-	border: 1px solid #ddd;
-	padding: 6px;
+.page-title {
+	font-weight: normal;
 	font-size: 1.1em;
-	margin: 9px 0;
+        cursor: default;
 }
 
-#board {
-	width: 75%;
+h2 {
+	text-align:left;
+	font-size:1.2em;
+	font-weight:normal;
 }
 
-#recent-boards.hidden {
-	display: none;
+h2.topOfPage {
+	margin-top:0px;
+        cursor: default;
 }
 
-#recent-boards ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
+h2.section-title {
+	font-weight: normal;
+	color:#dddddd;
+	background-color:#222222;
+	vertical-align: middle;
+	padding: 8px;
+	font-size:1em;
+        text-align: -webkit-center;
+	cursor: pointer;
+	border-bottom: 1px solid #1F1F1F;
+	line-height:2em;
+}
+.section {
+	padding-bottom:30px !important;
 }
 
-#recent-boards li {
-	margin-bottom: 8px;
+#AvaRobotics {
+	padding-top: 7%;
+  height:70px;
+  border:0;
+  padding-left:5px;
+  float:none;
 }
 
-#recent-boards li:last-child {
-	margin-bottom: 0;
+div.titlebar {
+  position:relative;
+  font-family:sans-serif;
+  font-size:large;
+  color:#dddddd;
+  /* background-color:#222222; */
+  min-height:65px;
+  /* background-image: linear-gradient(to top, #111111 0%, #222222 15%, #222222 85%, black 100%); */
+  /* background-image: -webkit-linear-gradient(to top, rgb(0,0,0) 0%, rgb(20,92,9) 10%, rgb(20,92,9) 90%, rgb(255,255,255) 100%); */
+  margin-bottom:0px;
+  width:100%;
+  text-align:center;
 }
 
-footer {
-	text-align: center;
-	flex-shrink: 0;
-	height: 40px;
+
+
+/* Forms, default class */
+select, textarea, .ui-timepicker-wrapper {
+	background-color:#333333;
+	color:#eeeeee !important;
+	border:2px solid #000;
+	padding:4px;
+	border-radius:4px;
+        font-size:16px;
 }
 
-footer a {
-	opacity: .3;
+.ui-timepicker-list li {
+	color:#eeeeee;
 }
 
-footer a:hover {
-	opacity: 1;
+input  {
+  width:auto;
+  background-color: #3c3939;
+  color: #eeeeee;
+  border:1px solid #3c3939;
+  padding: 8px;
+  outline-style:none;
 }
 
-.lang-selector {
-	top: 20px;
-	right:20px;
-	position: absolute;
-	overflow: hidden;
-	padding: 10px;
+input:-webkit-autofill, input:autofill, input:-moz-autofill  {		/* remove Chrome's yellow background for autofilled items like username & pswd */
+    -webkit-box-shadow: 0 0 0px 1000px #3c3939 inset;
+	-webkit-text-fill-color: #eeeeee;	
 }
 
-.lang-selector span {
-	padding: 9px 25px;
-	border: 1px solid black;
-	border-radius: 5px;
+input:focus {
+	border:2px solid green;
 }
 
-.lang-selector ul {
-	padding-left: 22px;
-	list-style: none;
-	width: 70px;
-	background: white;
-	max-height: 0;
-	overflow: hidden;
-	transition-duration: 1s;
-	border-radius: 5px;
+/* Specify text selection colors. Don't normally have to do this since there is a
+   browser default but setting it explicitly for dialog windows to fix bugs like DE2415. */
+.popupWindowContent input::selection {
+	color: #fffaf6 !important;
+	background-color: #2E8CFF !important;
+}
+.popupWindowContent input::-moz-selection {
+	color: #fffaf6 !important;
+	background-color: #2E8CFF !important;
 }
 
-.lang-selector:hover ul {
-	max-height: 600px;
-	box-shadow: 2px 2px 10px #666;
-	border: 0;
+
+/*********  BUTTONS & FORM CONTROLS **********/
+div.bigButton {
+	text-align:center;
+/*	margin:40px;
+	margin-top:0px; */
+	margin-bottom:5%;
+	background-color:#101010;
+	vertical-align:middle;
 }
 
-.lang-selector li {
-	height: 25px;
-	padding: 5px;
+div.inlineButton, input.inlineButton, div.bigButtonBottom {		/* for ok/cancel buttons, etc. */
+	display:inline-block;
+	min-height:4.5em;
+	line-height:4.5em;
+	vertical-align:middle;
+	text-align:center;
+	margin:0px;
+	background-color: #1b1b1b !important;
+	box-sizing:border-box;
+	border:1px solid #232323;
+	border-radius:0px !important;
+	font-size:1em;
+	margin-top:0px !important;
+	-webkit-appearance:none !important;		/* don't use iOS default button styling */
+	cursor:pointer;
+	padding:4px; 
+}
+div.inlineButton:focus, input.inlineButton:focus, div.bigButtonBottom:focus {	
+	border: 1px dashed #2c2c2c !important;		/* change ugly blue outline around focused buttons */
+	outline: 0;
 }
 
-.lang-selector:hover li {
-	list-style: none;
+.inlineButton.smaller {
+	min-height:2.5em !important;
+	line-height:2.5em !important;
 }
 
-.lang-selector li a {
-	width: 100%;
-	display: block;
+/* Set this explicitly so we don't reduce size of login button on small screens */
+#login_form input.inlineButton {
+	min-height:4em; 
+	line-height:4em;
+} 
+
+.ui-datepicker-trigger, .arrowLink {		/* adjust jQuery UI's datepicker trigger buttons */
+	border:0px;
+	background-color:transparent;
+/*  font-size:.8em !important; */
+	font-size:22px !important;
+	font-weight:bold;
+	border: 1px solid #333333;
+	margin-left:2px;
+	vertical-align:top;
 }
 
-.lang-selector li:hover {
-	list-style: circle;
-	list-style: disclosure-closed;
+div.bigButtonTop {
+	background-color:#212121;
+	padding:50px 30px;
+	border-bottom: 3px solid rgb(34, 34, 34);	
 }
+
+div.bigButtonBottom a {		/* links here should be full width of space */
+	width:100%;
+	flex-direction: row !important;
+}
+
+div.bigButtonBottom {			/* also see div.inlineButton above */
+	border-top: 1px solid #232323;
+	width:100%;
+	flex-direction: row; 	
+}
+
+input[type="button"], input[type="submit"], input[type="button"].standard {
+	color: #81CA00;		/* lime green */
+	border-radius:5px;
+	cursor: pointer;
+	-webkit-appearance:none !important;	
+}
+
+input[type="button"]:hover, input[type="button"]:disabled, input[type="submit"]:hover, input[type="submit"]:disabled, div.bigButtonBottom:hover {
+	opacity:.6;
+}
+
+input:disabled , :disabled{
+	cursor: not-allowed;
+}
+
+/************** SMALL SCREEN ADJUSTMENTS **************/
+@media only screen and (max-height: 750px) {
+	body					{font-size: 0.95em;}					/* reduce font size slightly */
+	h2					{font-size: 1.1em;}						/* reduce heading fonts */			
+	#roomListDiv 		{max-height:200px !important;}			/* reduce height of room lists */
+	div.bigButtonTop		{padding:25px}							/* reduce height of home page button areas */
+	div.inlineButton, 
+	input.inlineButton, 
+	div.bigButtonBottom	{min-height:2.5em; line-height:2.5em;}	/* reduce height of buttons */
+	#page-container		{padding: 20px; min-height:400px;}		/* reduce height of pages in general */
+	h2.section-title		{padding: 2px 8px; margin-bottom:2px;}	/* reduce height of section headers */
+	.section			{padding-bottom: 20px;}					/* reduce height of sections */
+}
+/* Enlarge session control buttons on iPads in landscape mode */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+	.controlBar			{min-height:4em !important; line-height:4em !important;} 
+	.controlBar input.controlBarButton {line-height:5em !important; min-height:5em !important; min-width:5em !important;}
+	.toolbarTopButton	{height: 2em !important; width:2em !important }	
+}
+
+/*************** MOBILE OPTIMIZATIONS *****************/
+@viewport{
+    zoom: 1.0;
+    width: extend-to-zoom;
+}
+
+/***************** VOLUME SLIDER **********************/
+
+input[type=range] {
+    /*removes default webkit styles*/
+    -webkit-appearance: none;
+    
+    /*fix for FF unable to apply focus style bug */
+    /* border: 1px #CCCCCC; */
+    border: 1px red;
+    
+    /*required for proper track sizing in FF*/
+    width: 100px;
+      line-height:50%; 
+  vertical-align:middle;"
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 300px;
+    height: 5px;
+    /* background:#43ea43; */
+    background:#626262;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 17px;
+    width: 9px;
+    border-radius: 25%;
+    background: #FFFFFF;
+    margin-top: -6px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    
+}
+
+input[type=range]::-moz-range-track {
+    /*width: 300px;*/
+    height: 5px;
+    background: #2bbf1e;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+
+input[type=range]::-ms-track {
+    width: 300px;
+    height: 5px;
+    
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+    
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #e8e40d;
+    border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+    background: red;
+    border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #66cc33;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #e8e40d;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: red;
+}
+
+#collabCopy{
+	cursor:pointer;
+	border: none;
+	width: 0.85em;
+}
+/*******************************************************/
