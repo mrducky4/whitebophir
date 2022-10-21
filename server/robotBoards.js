@@ -10,6 +10,10 @@ function delay_msec(msecs) {
     return new Promise(resolve => setTimeout(resolve, msecs));
 }
 
+/**
+ * Get the singleton object, creating it if necessary
+ * @returns robotBoards singleton
+ */
 function getRobotBoards() {
     if (null == gRobotBoards) {
         gRobotBoards = new robotBoards();
@@ -19,12 +23,18 @@ function getRobotBoards() {
 
 /**
  * Delete the singleton, useful for unit testing
- * @returns 
  */
-function deleteRobotBoards() {
+ function deleteRobotBoards() {
+    if (gRobotBoards){
+        gRobotBoards.enablePoll = false;
+    }
     gRobotBoards = null;
 }
 
+/**
+ * Track teleport sessions for robots that have whiteboard capability.
+ * Create a randome code to identify each board.
+ */
 class robotBoards {
     constructor() {
         this.boardList = []; // object for each active robot board, with robotID, code, rms, etc.
@@ -36,6 +46,9 @@ class robotBoards {
         log('created robotBoards');
     }
 
+    /**
+     * Load configuration information from a YAML file
+     */
     loadConfig() {
         try {
             this.robotList = [];
@@ -59,6 +72,14 @@ class robotBoards {
         }
     }
 
+    /**
+     * Add a new board to our list
+     * @param {string} code 
+     * @param {string} rms 
+     * @param {string} user 
+     * @param {string} pw 
+     * @param {string} robot 
+     */
     addBoard(code, rms, user, pw, robot) {
         const board = {
             code: code,
@@ -86,6 +107,11 @@ class robotBoards {
         });
     }
 
+    /**
+     * Check one RMS one time for active teleport sessions.
+     * Add or remove boards from our list, based on the active sessions.
+     * @param {*} rms object, with info needed to access an RMS
+     */
     async pollOnceRMS(rms) {
         try{
             log(`query RMS ${rms.rms} for sessions`);
@@ -122,6 +148,10 @@ class robotBoards {
         }
     }
 
+    /**
+     * Poll one RMS in a loop.
+     * @param {*} index into the list of RMS names
+     */
     async pollLoopRMS(index) {
         const rms = this.rmsList[index];
         while(this.enablePoll) {
@@ -131,6 +161,10 @@ class robotBoards {
         log(`ending pollLoop for ${rms.rms}`);
     }
 
+    /**
+     * Start a polling loop for each RMS in our list.
+     * @returns Promise that resolves when all polling has ended
+     */
     startPollingAllRMS() {
         let promises = []
         for (let i=0; i<this.rmsList.length; i++) {
@@ -149,6 +183,10 @@ class robotBoards {
         return board;
     }
 
+    /**
+     * Make a short random alphanumeric code
+     * @returns the code string
+     */
     makeRandomCode() {
         const codechars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789';
         let code = "";
