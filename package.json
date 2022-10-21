@@ -21,7 +21,8 @@
   },
   "scripts": {
     "start": "node ./server/server.js",
-    "test": "nightwatch tests && nightwatch tests --env jwt"
+    "test": "nightwatch tests && nightwatch tests --env jwt",
+    "test_mocha": "mocha ./tests_mocha"
   },
   "main": "./server/server.js",
   "repository": {
@@ -29,7 +30,10 @@
     "url": "http://github.com/lovasoa/whitebophir.git"
   },
   "devDependencies": {
+    "chai": "^4.3.6",
     "geckodriver": "^3.0.1",
-    "nightwatch": "^1.7.12"
+    "mocha": "^10.1.0",
+    "nightwatch": "^1.7.12",
+    "sinon": "^14.0.1"
   }
 }
