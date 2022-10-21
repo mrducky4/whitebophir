@@ -125,12 +125,12 @@ function onTogglePageClick(e) {
 	console.log(`page toggle clicked: ${id}`);
 	if(id =="buttonBack"){
 		console.log("Show home page");
-		document.getElementById("homePageContainer").style.display = "grid";
+		document.getElementById("avaLogoPageContainer").style.display = "grid";
 		document.getElementById("boardContainer").style.display = "none";
 		mode = "home"
 	}else{
 		console.log("Show board");
-		document.getElementById("homePageContainer").style.display = "none";
+		document.getElementById("avaLogoPageContainer").style.display = "none";
 		document.getElementById("boardContainer").style.display = "grid";
 		
 		if (id === "collabWhiteboard") {
