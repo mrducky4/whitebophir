@@ -30,24 +30,22 @@
 			<!-- end menu -->
 			<div id="page-container" style="min-height:400px;margin-top:5%;">
 				<div class="bigButton">
-					<form name="collabCode_form" id="collabCode_form" onsubmit='if (userLogin()) {goToView("home.htm");} return false;'>
+					<form action="boards" method="GET">
 						<div class="bigButtonTop" style="text-align:left; padding: 40px 30px;">
 							<div class="fieldGroup">
 								<label>Please Enter Collaboration Code</label>
-								<input type="text" id="collabCode" required placeholder="Enter Collaboration Code" value="" style="width:95%;" title="Please enter collaboration code" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+								<input type="text" id="board" name="board" required placeholder="Enter Collaboration Code" value="" style="width:95%; margin-top: 3px;"  title="Please enter collaboration code" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"/>
 							</div>
 						</div>
 						<div class="buttonsGroup" style="margin-top:0px;">
-							<input type="submit" id="auth" value="Go" class="inlineButton" style="width:100%;">
+							<input type="submit" value="Go" class="inlineButton" style="width:100%;">
 						</div>
 					</form>
 				</div>
-
 				
 			</div>	<!-- end page container -->
 		</div>	<!-- end login content -->
 	</div>	<!-- end outer container -->
 
 </body>
-<script src="../js/index.js" async defer></script>
 </html>
