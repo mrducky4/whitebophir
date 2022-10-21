@@ -1,0 +1,14 @@
+robot: SB00001
+rms: rms1
+username: user1@avarobotics.com
+password: passwd1
+---
+robot: SB00002
+rms: rms2
+username: user2@avarobotics.com
+password: passwd2
+---
+robot: SB00003
+rms: rms1
+username: user1@avarobotics.com
+password: passwd1
