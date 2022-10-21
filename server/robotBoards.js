@@ -111,7 +111,7 @@ class robotBoards {
                                 id: session.id,
                                 collaborationCode: newCode,
                             }
-                            rmsutil.rmsPost(rms, '/rms/setSession', args, true);
+                            rmsutil.rmsPost(rms, '/api/rms/setSession', args, true);
                         }
                     }
                 }

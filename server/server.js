@@ -1,6 +1,7 @@
 var app = require("http").createServer(handler),
   sockets = require("./sockets.js"),
   {log, monitorFunction} = require("./log.js"),
+  robotBoardsMod = require('./robotBoards.js'),
   path = require("path"),
   fs = require("fs"),
   crypto = require("crypto"),
@@ -30,6 +31,10 @@ sockets.start(app);
 
 app.listen(config.PORT, config.HOST);
 log("server started", { port: config.PORT });
+
+var robotBoards = robotBoardsMod.getRobotBoards();
+robotBoards.loadConfig();
+robotBoards.startPollingAllRMS();
 
 var CSP =
   "default-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' ws: wss:";

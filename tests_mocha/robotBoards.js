@@ -94,7 +94,7 @@ describe("robotBoards", function() {
                 if (sessioncallcount <= 2) {
                     rv = sessionResponse;
                 }
-            } else if (api == '/rms/setSession') {
+            } else if (api == '/api/rms/setSession') {
                 newCollabCode = data.collaborationCode;
                 setSessionId = data.id;
             }
