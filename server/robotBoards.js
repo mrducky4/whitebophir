@@ -3,6 +3,7 @@ const fs   = require('fs');
 const log = require("./log.js").log;
 const rmsutil = require("./rmsutil.js");
 
+var CONFIG_FILENAME = process.env["WBO_CONFIG_FILENAME"] || '/opt/ava/config/robots.yaml';
 var gRobotBoards = null;
 
 // Delay for the given number of msec
@@ -40,7 +41,7 @@ class robotBoards {
         this.boardList = []; // object for each active robot board, with robotID, code, rms, etc.
         this.rmsList = [];   // object for each RMS with user, pw
         this.robotList = []; // list of robotIDs capable of whiteboarding
-        this.configFileName = '/opt/ava/config/robots.yaml';
+        this.configFileName = CONFIG_FILENAME;
         this.pollInterval = 15000; // RMS polling interval in msec
         this.enablePoll = true;
         log('created robotBoards');
@@ -70,6 +71,8 @@ class robotBoards {
         } catch (e) {
             log(e);
         }
+        log('config loaded, rmsList', this.rmsList);
+        log('config loaded, robotList', this.robotList);
     }
 
     /**

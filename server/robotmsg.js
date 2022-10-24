@@ -1,6 +1,8 @@
 const { getSnapshotMarkers, getSnapshotPlain, transformWhiteboardImage } = require("./robotimage.js")
 const request = require('request-promise-native')
 const log = require("./log.js").log
+const robotBoardsMod = require('./robotBoards.js')
+const rmsutil = require("./rmsutil.js");
 
 // RMS and Robot configuration
 // TODO support multiple robots, each could be on a different RMS,
@@ -31,6 +33,21 @@ async function rmsGet(api) {
         rv = e;
     }
     return rv;
+}
+
+/**
+ * POST a robot API command, via RMS proxy.
+ * 
+ * @param {*} rmsInfo dict including rms name, user, pw 
+ * @param {string} robotapi URL path of the robot API
+ * @param {*} data object to send as JSON body
+ * @param {bool} logit true to log a message
+ * @returns full response, or exception if error
+ */
+async function rmsPostRobot(rmsInfo, robotapi, data, logit) {
+    if (rmsInfo) {
+        return await rmsutil.rmsPost(rmsInfo, `/api/htproxy/whiteboard/${rmsInfo.robot}${robotapi}`, data, logit);
+    }
 }
 
 async function rmsPost(api, data) {
@@ -69,7 +86,7 @@ async function handleCamPreset(mode) {
     }
 }
 
-async function handleProjectorMode(mode, boardName, socket) {
+async function handleProjectorMode(boardRobotInfo, mode, boardName, socket) {
     let args = {};
     let restartRobotBrowser = false;
     if (mode === "home") {
@@ -87,12 +104,16 @@ async function handleProjectorMode(mode, boardName, socket) {
         args.tilt = "down";
         restartRobotBrowser = true;
     }
-    await rmsPost('/robot/torso/set', args)
+    await rmsPostRobot(boardRobotInfo, '/robot/torso/set', args, true);
     // If we're going to project, then brute force restart the robot's
     // browser as a safeguard against it getting stuck without a connection
     // to the server.
     if (restartRobotBrowser) {
-        await rmsPost('/robot/browser/restart', {});
+        if (boardRobotInfo) {
+            let serverhost = socket.request.headers.host;
+            const boardUrl = {url:`http://${serverhost}/robotboards/${boardRobotInfo.code}`};
+            await rmsPostRobot(boardRobotInfo, '/robot/browser/restart', boardUrl, true);
+        }
         // wait for restart, then clear the black default image
         delay(3000).then(()=>{
             socket.broadcast.to(boardName).emit("broadcast", {
@@ -193,6 +214,8 @@ async function goToRoom(room) {
 }
 
 function handleRobotMsg(message, boardName, socket, io) {
+    const boardRobotInfo = robotBoardsMod.getRobotBoards().getBoardFromCode(boardName);
+
     if (message.msg === "log") {
         log("clientlog", message.logobj);
     } else {
@@ -215,7 +238,7 @@ function handleRobotMsg(message, boardName, socket, io) {
         goToRoom(message.args.name);
     }
     else if (message.msg === "projectormode") {
-        handleProjectorMode(message.args.mode, boardName, socket);
+        handleProjectorMode(boardRobotInfo, message.args.mode, boardName, socket);
     }
     else if (message.msg === "getwbsnapshot") {
         getSnapshot(boardName, socket, io);
