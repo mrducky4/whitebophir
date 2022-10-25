@@ -5,9 +5,7 @@ const robotBoardsMod = require('./robotBoards.js')
 const rmsutil = require("./rmsutil.js");
 
 // RMS and Robot configuration
-// TODO support multiple robots, each could be on a different RMS,
-// TODO maybe something like use the robot ID or map name as the board name,
-// TODO and somehow associate RMS information with that.
+// TODO remove these, replace with info from getBoardFromCode()
 var RMSNAME = process.env["WBO_RMSNAME"] || "eft.ava8.net";
 var RMSUSER = process.env["WBO_RMSUSER"] || "unknown";
 var RMSPW = process.env["WBO_RMSPW"] || "unknown";
@@ -50,6 +48,7 @@ async function rmsPostRobot(rmsInfo, robotapi, data, logit) {
     }
 }
 
+// TODO replace this with rmsutil.rmsPost()
 async function rmsPost(api, data) {
     let rv;
     try {
@@ -86,6 +85,15 @@ async function handleCamPreset(mode) {
     }
 }
 
+/**
+ * Send commands to the robot API and other board clients to respond to
+ * changes in collaboration mode, such as at the whiteboard or not.
+ * 
+ * @param {*} boardRobotInfo including robotid and RMS
+ * @param {*} mode like 'home' or 'whiteboard'
+ * @param {*} boardName name of the whiteboard, i.e. the 'collab code'
+ * @param {*} socket websocket from socket.io
+ */
 async function handleProjectorMode(boardRobotInfo, mode, boardName, socket) {
     let args = {};
     let restartRobotBrowser = false;
