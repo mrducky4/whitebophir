@@ -183,7 +183,7 @@ function getSnapshotFromCam(boardRobotInfo, boardName, socket, io) {
         // Send event messages back to only the client that asked for the capture
         socket.emit("broadcast", {
             type:"robotmessage", msg:"plaincaptured",
-            args:{success:true, filename:`${boardRobotInfo.code}__snapshot_plain.jpg.jpg`},
+            args:{success:true, filename:`${boardRobotInfo.code}__snapshot_plain.jpg`},
             tool:"robotTool"
         });
     })
