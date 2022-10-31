@@ -4,13 +4,6 @@ const log = require("./log.js").log
 const robotBoardsMod = require('./robotBoards.js')
 const rmsutil = require("./rmsutil.js");
 
-// RMS and Robot configuration
-// TODO remove these, replace with info from getBoardFromCode()
-var RMSNAME = process.env["WBO_RMSNAME"] || "eft.ava8.net";
-var RMSUSER = process.env["WBO_RMSUSER"] || "unknown";
-var RMSPW = process.env["WBO_RMSPW"] || "unknown";
-var ROBOT = process.env["WBO_ROBOT"] || "SB00243";
-
 // Camera preset values. Could these be different for different robots?
 const tiltWhiteboard = 0.0;
 const tiltStation = 0.4;

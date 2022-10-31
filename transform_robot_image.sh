@@ -8,7 +8,7 @@ out_filename="${boardcode}_background_whiteboard.jpg"
 
 rm -f client-data/background_whiteboard.jpg
 sleep 0.3
-./get_snapshot.sh $1 $2 $3 $4 > ${wb_filename}
+./get_snapshot.sh $1 $2 $3 $4 > "xform/${wb_filename}"
 
 cd xform
 pipenv run python xform.py ${markers_filename} ${wb_filename} ${out_filename}
