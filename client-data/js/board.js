@@ -276,11 +276,13 @@ function loadPlainSnapshot() {
  * This updates only the local user's view. Other users of the same board do
  * not get this updated whiteboard snapshot, and the snapshot image is not included
  * in the board data saved on the server.
+ * 
+ * @param {*} filename of the snapshot image file to load
  */
-function updateWhiteboardSnapshot() {
+function updateWhiteboardSnapshot(filename) {
 	// Use a unique number to make sure the image isn't cached anywhere
 	const num = new Date().getTime();
-	const imageurl = `background_whiteboard.jpg?unique=${num}`;
+	const imageurl = `${filename}?unique=${num}`;
 	getDataURLfromFile(imageurl, (dataurl) => {
 		// This code is very similar to document.js for adding a new image
 		var xlinkNS = "http://www.w3.org/1999/xlink";
@@ -693,7 +695,7 @@ function messageForRobotTool(message) {
 	}
 	if (m == "wbcaptured" && !Tools.robotTools.isRobotBoard()) {
 		if (message.args.success) {
-			updateWhiteboardSnapshot();
+			updateWhiteboardSnapshot(message.args.filename);
 		} else {
 			toggleLoadingImg(false);
 			removeWhiteboardSnapshot();

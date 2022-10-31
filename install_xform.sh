@@ -14,7 +14,6 @@ mkdir -p xform
 
 cp $SRC/Pipfile xform
 cp $SRC/xform.py xform
-cp ../scratchpad/projector_alignment/alignwithtag.py xform
 
 cd xform
 pipenv install

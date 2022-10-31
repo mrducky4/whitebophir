@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e # exit on error
 
-sleep 0.3
-./get_snapshot.sh > xform/snapshot_markers.jpg
+boardcode=$5
+markers_filename="${boardcode}_snapshot_markers.jpg"
 
-echo "Done getting snapshot with markers"
+sleep 0.3
+./get_snapshot.sh $1 $2 $3 $4 > "xform/${markers_filename}"
+
+echo "Done getting snapshot with markers for whiteboard code ${boardcode}"

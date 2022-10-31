@@ -23,4 +23,26 @@ async function rmsPost(rms, api, data, logit) {
     return rv;
 }
 
-module.exports = { rmsPost };
+/**
+ * 
+ * @param {*} rms dict including rms name, user, pw 
+ * @param {string} api URL path, everything after the hostname
+ * @param {bool} logit true to log a message
+ * @returns full response, or exception if error
+ */
+ async function rmsGet(rms, api, logit) {
+    let rv;
+    try {
+        //let rmsUrl = `https://${RMSUSER}:${RMSPW}@${RMSNAME}/api/htproxy/whiteboard/${ROBOT}${api}`;
+        let rmsUrl = `https://${rms.user}:${rms.pw}@${rms.rms}${api}`;
+        let resp = await request({uri:rmsUrl, json:true, timeout:5000});
+        if (logit) log(`rms GET ${api}`, resp);
+        rv = resp;
+    } catch (e) {
+        log(`rms GET ERROR ${api}`, e);
+        rv = e;
+    }
+    return rv;
+}
+
+module.exports = { rmsPost, rmsGet };
