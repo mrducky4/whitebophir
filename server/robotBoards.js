@@ -42,7 +42,7 @@ class robotBoards {
         this.rmsList = [];   // object for each RMS with user, pw
         this.robotList = []; // list of robotIDs capable of whiteboarding
         this.configFileName = CONFIG_FILENAME;
-        this.pollInterval = 15000; // RMS polling interval in msec
+        this.pollInterval = 5000; // RMS polling interval in msec
         this.enablePoll = true;
         log('created robotBoards');
     }
