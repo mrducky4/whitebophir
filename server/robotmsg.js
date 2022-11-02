@@ -4,13 +4,6 @@ const log = require("./log.js").log
 const robotBoardsMod = require('./robotBoards.js')
 const rmsutil = require("./rmsutil.js");
 
-// RMS and Robot configuration
-// TODO remove these, replace with info from getBoardFromCode()
-var RMSNAME = process.env["WBO_RMSNAME"] || "eft.ava8.net";
-var RMSUSER = process.env["WBO_RMSUSER"] || "unknown";
-var RMSPW = process.env["WBO_RMSPW"] || "unknown";
-var ROBOT = process.env["WBO_ROBOT"] || "SB00243";
-
 // Camera preset values. Could these be different for different robots?
 const tiltWhiteboard = 0.0;
 const tiltStation = 0.4;
@@ -18,20 +11,6 @@ const zoomWhiteboard = 8;
 const zoomStation = 3;
 
 const delay = t => new Promise(resolve => setTimeout(resolve, t));
-
-async function rmsGet(api) {
-    let rv;
-    try {
-        let rmsUrl = `https://${RMSUSER}:${RMSPW}@${RMSNAME}/api/htproxy/whiteboard/${ROBOT}${api}`;
-        let resp = await request({url:rmsUrl, json:true, timeout:5000});
-        log(`rms GET ${api}`, resp);
-        rv = resp;
-    } catch (e) {
-        log(`rms GET ERROR ${api}`, e);
-        rv = e;
-    }
-    return rv;
-}
 
 /**
  * POST a robot API command, via RMS proxy.
@@ -48,26 +27,25 @@ async function rmsPostRobot(rmsInfo, robotapi, data, logit) {
     }
 }
 
-// TODO replace this with rmsutil.rmsPost()
-async function rmsPost(api, data) {
-    let rv;
-    try {
-        let rmsUrl = `https://${RMSUSER}:${RMSPW}@${RMSNAME}/api/htproxy/whiteboard/${ROBOT}${api}`;
-        let resp = await request({uri:rmsUrl, method:'POST', json:true, body:data, timeout:5000});
-        log(`rms POST ${api}`, resp);
-        rv = resp;
-    } catch (e) {
-        log(`rms POST ERROR ${api}`, e);
-        rv = e;
+/**
+ * GET a robot API command, via RMS proxy.
+ * 
+ * @param {*} rmsInfo dict including rms name, user, pw 
+ * @param {string} robotapi URL path of the robot API
+ * @param {bool} logit true to log a message
+ * @returns full response, or exception if error
+ */
+ async function rmsGetRobot(rmsInfo, robotapi, logit) {
+    if (rmsInfo) {
+        return await rmsutil.rmsGet(rmsInfo, `/api/htproxy/whiteboard/${rmsInfo.robot}${robotapi}`, logit);
     }
-    return rv;
 }
 
-async function handleCamPreset(mode) {
+async function handleCamPreset(boardRobotInfo, mode) {
     if (mode === "home") {
-        await rmsGet("/robot/drive/resetTilt");
+        await rmsGetRobot(boardRobotInfo, "/robot/drive/resetTilt", true);
         // zoomDirectInternal caused irregular zoom out then zoom in again
-        await rmsGet("/robot/cameraPose/zoomDirect?level=0");
+        await rmsGetRobot(boardRobotInfo, "/robot/cameraPose/zoomDirect?level=0", true);
     } else {
         let tiltposition;
         let zoomlevel;
@@ -80,8 +58,8 @@ async function handleCamPreset(mode) {
         }
         let zoomapi = `/robot/cameraPose/zoomDirect?level=${zoomlevel}`;
         let tiltapi = `/robot/drive/payloadPose?cameraTilt=${tiltposition}`;
-        await rmsGet(tiltapi);
-        await rmsGet(zoomapi);
+        await rmsGetRobot(boardRobotInfo, tiltapi, true);
+        await rmsGetRobot(boardRobotInfo, zoomapi, true);
     }
 }
 
@@ -147,31 +125,35 @@ async function handleProjectorMode(boardRobotInfo, mode, boardName, socket) {
 
 /**
  * Orchestrate the whiteboard snapshot capture and alignment process.
+ * @param {*} boardRobotInfo including robotid and RMS
  * @param {string} boardName name of the whiteboard
  * @param {*} socket the triggering message came in on, from the client
  * @param {*} io sockets.io object
  */
-function getSnapshot(boardName, socket, io) {
+function getSnapshot(boardRobotInfo, boardName, socket, io) {
     // these message go to all clients of the board, except the one
     // that sent the "getwbsnapshot" message
     socket.broadcast.to(boardName).emit("broadcast", {
         type:"robotmessage", msg:"showmarkers", tool:"robotTool"
     });
-    getSnapshotMarkers() // get image with projected alignment marks
+    getSnapshotMarkers(boardRobotInfo) // get image with projected alignment marks
     .then((val) => {
         log(`getSnapshotMarkers: ${val}`);
         socket.broadcast.to(boardName).emit("broadcast", {
             type:"robotmessage", msg:"showblack", tool:"robotTool"
         });
         // get image without alignment marks, align the image to the app annotations
-        return transformWhiteboardImage();
+        return transformWhiteboardImage(boardRobotInfo);
     })
     .then((val) => {
         log(`transformWhiteboardImage: ${val}`);
         // these message go to all clients of the board, including the one
         // that sent the "getwbsnapshot" message
         io.in(boardName).emit("broadcast", {
-            type:"robotmessage", msg:"wbcaptured", args:{success:true}, tool:"robotTool"
+            type:"robotmessage", msg:"wbcaptured",
+            // filename must match the name in transform_robot_image.sh
+            args:{success:true, filename:`${boardRobotInfo.code}_background_whiteboard.jpg`},
+            tool:"robotTool"
         });
     })
     .catch(e => {
@@ -194,13 +176,15 @@ function getSnapshot(boardName, socket, io) {
  * @param {*} socket the triggering message came in on, from the client
  * @param {*} io sockets.io object
  */
-function getSnapshotFromCam(boardName, socket, io) {
+function getSnapshotFromCam(boardRobotInfo, boardName, socket, io) {
     getSnapshotPlain() // get image with projected alignment marks
     .then((val) => {
         log(`getSnapshotPlain: ${val}`);
         // Send event messages back to only the client that asked for the capture
         socket.emit("broadcast", {
-            type:"robotmessage", msg:"plaincaptured", args:{success:true}, tool:"robotTool"
+            type:"robotmessage", msg:"plaincaptured",
+            args:{success:true, filename:`${boardRobotInfo.code}__snapshot_plain.jpg`},
+            tool:"robotTool"
         });
     })
     .catch(e => {
@@ -217,8 +201,8 @@ function getSnapshotFromCam(boardName, socket, io) {
     });
 }
 
-async function goToRoom(room) {
-    await rmsPost('/robot/tel/goToRoom', {name:room});
+async function goToRoom(boardRobotInfo, room) {
+    await rmsPostRobot(boardRobotInfo, '/robot/tel/goToRoom', {name:room}, true);
 }
 
 function handleRobotMsg(message, boardName, socket, io) {
@@ -240,19 +224,19 @@ function handleRobotMsg(message, boardName, socket, io) {
         //    .catch(e => log(`ERROR from xform ${e}`));
     }
     else if (message.msg === "camerapreset") {
-        handleCamPreset(message.args.mode);
+        handleCamPreset(boardRobotInfo, message.args.mode);
     }
     else if (message.msg === "gotoroom") {
-        goToRoom(message.args.name);
+        goToRoom(boardRobotInfo, message.args.name);
     }
     else if (message.msg === "projectormode") {
         handleProjectorMode(boardRobotInfo, message.args.mode, boardName, socket);
     }
     else if (message.msg === "getwbsnapshot") {
-        getSnapshot(boardName, socket, io);
+        getSnapshot(boardRobotInfo, boardName, socket, io);
     }
     else if (message.msg === "getplainsnapshot") {
-        getSnapshotFromCam(boardName, socket, io);
+        getSnapshotFromCam(boardRobotInfo, boardName, socket, io);
     }
 }
 
