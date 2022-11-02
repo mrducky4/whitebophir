@@ -43,6 +43,7 @@
                 Tools.drawingArea.innerHTML = '';
                 break;
         }
+        updateWhiteboardBackground();
     }
 
     const clearTool = {

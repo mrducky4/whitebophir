@@ -114,7 +114,8 @@ if (window.location.pathname.includes("/robotboards/")) {
 
 	if (Tools.robotTools.isRobotBoard()) {
 		Tools.svg.style.backgroundImage = "url('keepout.png')";
-	}
+	}	
+	updateWhiteboardBackground();
 	
 })();
 
@@ -310,6 +311,34 @@ function updateWhiteboardSnapshot(filename) {
 function removeWhiteboardSnapshot() {
 	elem = Tools.svg.getElementById("whiteboard_snapshot");
 	if (elem) Tools.drawingArea.removeChild(elem);
+}
+
+/**
+ * update background to apple whiteboard image to avoid disappontment
+ * between white prestine background and yellowish background of the whiteboard.
+ */
+function updateWhiteboardBackground() {
+	if (!Tools.robotTools.isRobotBoard()){
+		const imageurl = `apple_lab_blank_capture.svg`;
+		getDataURLfromFile(imageurl, (dataurl) => {
+			// This code is very similar to document.js for adding a new image
+			var xlinkNS = "http://www.w3.org/1999/xlink";
+			var img = Tools.createSVGElement("image");
+			img.id="whiteboard_background";
+			img.setAttribute("class", "layer-"+Tools.layer); // is this necessary?
+			img.setAttributeNS(xlinkNS, "href", dataurl);
+			// Assume the image is same size as the drawing area
+			img.x.baseVal.value = 0;
+			img.y.baseVal.value = 0;
+			img.setAttribute("width", Tools.svg.width.baseVal.value);
+			img.setAttribute("height", Tools.svg.height.baseVal.value);
+			//Remove any previous image, there should be only one whiteboard background image
+			elem = Tools.svg.getElementById(img.id);
+			if (elem) Tools.drawingArea.removeChild(elem);
+			// Put the image at the beginning, so it is behind all the annotations
+			Tools.drawingArea.insertBefore(img, Tools.drawingArea.firstChild);
+		});
+	}
 }
 
 function onClearOverlayClick() {
