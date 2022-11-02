@@ -42,6 +42,10 @@ async function rmsPostRobot(rmsInfo, robotapi, data, logit) {
 }
 
 async function handleCamPreset(boardRobotInfo, mode) {
+    if (!boardRobotInfo) {
+        log("handleCamPreset no boardRobotInfo");
+        return;
+    }
     if (mode === "home") {
         await rmsGetRobot(boardRobotInfo, "/robot/drive/resetTilt", true);
         // zoomDirectInternal caused irregular zoom out then zoom in again
@@ -73,6 +77,10 @@ async function handleCamPreset(boardRobotInfo, mode) {
  * @param {*} socket websocket from socket.io
  */
 async function handleProjectorMode(boardRobotInfo, mode, boardName, socket) {
+    if (!boardRobotInfo) {
+        log("handleProjectorMode no boardRobotInfo");
+        return;
+    }
     let args = {};
     let restartRobotBrowser = false;
     if (mode === "home") {
@@ -202,6 +210,10 @@ function getSnapshotFromCam(boardRobotInfo, boardName, socket, io) {
 }
 
 async function goToRoom(boardRobotInfo, room) {
+    if (!boardRobotInfo) {
+        log("goToRoom no boardRobotInfo");
+        return;
+    }
     await rmsPostRobot(boardRobotInfo, '/robot/tel/goToRoom', {name:room}, true);
 }
 

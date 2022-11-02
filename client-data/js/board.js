@@ -314,8 +314,8 @@ function removeWhiteboardSnapshot() {
 }
 
 /**
- * update background to apple whiteboard image to avoid disappontment
- * between white prestine background and yellowish background of the whiteboard.
+ * update background to apple whiteboard image to avoid disappointment
+ * between white pristine background and yellowish background of the whiteboard.
  */
 function updateWhiteboardBackground() {
 	if (!Tools.robotTools.isRobotBoard()){
@@ -324,7 +324,9 @@ function updateWhiteboardBackground() {
 			// This code is very similar to document.js for adding a new image
 			var xlinkNS = "http://www.w3.org/1999/xlink";
 			var img = Tools.createSVGElement("image");
-			img.id="whiteboard_background";
+			// same id as regular snapshot because these images serve the same
+			//purpose and there should be only one of them
+			img.id="whiteboard_snapshot";
 			img.setAttribute("class", "layer-"+Tools.layer); // is this necessary?
 			img.setAttributeNS(xlinkNS, "href", dataurl);
 			// Assume the image is same size as the drawing area
