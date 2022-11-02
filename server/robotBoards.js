@@ -178,11 +178,17 @@ class robotBoards {
 
     getBoardFromCode(code) {
         let board = this.boardList.find(element => element['code'] == code);
+        if (!board) {
+            log(`no board for code ${code}`);
+        }
         return board;
     }
 
     getBoardFromRobot(robot) {
         let board = this.boardList.find(element => element['robot'] == robot);
+        if (!board) {
+            log(`no board for robot ${robot}`);
+        }
         return board;
     }
 
