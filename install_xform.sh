@@ -15,5 +15,7 @@ mkdir -p xform
 cp $SRC/Pipfile xform
 cp $SRC/xform.py xform
 
-cd xform
-pipenv install
+# This part is done in Dockerfile for making the docker image.
+# Do this manually if you are running outside of docker.
+#cd xform
+#pipenv install
