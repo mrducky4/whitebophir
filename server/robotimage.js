@@ -12,7 +12,7 @@ function pwd () {
 }
 
 async function getSnapshotMarkers(boardRobotInfo) {
-	const args = `${boardRobotInfo.rms} ${boardRobotInfo.user} ${boardRobotInfo.pw} ${boardRobotInfo.robot} ${boardRobotInfo.code}`;
+	const args = `'${boardRobotInfo.rms}' '${boardRobotInfo.user}' '${boardRobotInfo.pw}' '${boardRobotInfo.robot}' '${boardRobotInfo.code}'`;
 	return new Promise( (resolve, reject) => {
 		exec(`./get_snapshot_markers.sh ${args}`, (error, stdout, stderr) => {
 			if (error) reject(error.message);
@@ -22,7 +22,7 @@ async function getSnapshotMarkers(boardRobotInfo) {
 }
 
 async function getSnapshotPlain(boardRobotInfo) {
-	const args = `${boardRobotInfo.rms} ${boardRobotInfo.user} ${boardRobotInfo.pw} ${boardRobotInfo.robot} ${boardRobotInfo.code}`;
+	const args = `'${boardRobotInfo.rms}' '${boardRobotInfo.user}' '${boardRobotInfo.pw}' '${boardRobotInfo.robot}' '${boardRobotInfo.code}'`;
 	return new Promise( (resolve, reject) => {
 		exec(`./get_snapshot_plain.sh ${args}`, (error, stdout, stderr) => {
 			if (error) reject(error.message);
@@ -32,7 +32,7 @@ async function getSnapshotPlain(boardRobotInfo) {
 }
 
 async function transformWhiteboardImage(boardRobotInfo) {
-	const args = `${boardRobotInfo.rms} ${boardRobotInfo.user} ${boardRobotInfo.pw} ${boardRobotInfo.robot} ${boardRobotInfo.code}`;
+	const args = `'${boardRobotInfo.rms}' '${boardRobotInfo.user}' '${boardRobotInfo.pw}' '${boardRobotInfo.robot}' '${boardRobotInfo.code}'`;
 	return new Promise( (resolve, reject) => {
 		exec(`./transform_robot_image.sh ${args}`, (error, stdout, stderr) => {
 			if (error) reject(stdout + ' ' + error.message);
