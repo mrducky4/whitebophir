@@ -1,0 +1,30 @@
+FROM nikolaik/python-nodejs:python3.10-nodejs19-slim
+
+WORKDIR /opt/app
+
+RUN chown -R 1000:1000 /opt/app
+
+# curl used by scripts to access robot API
+# libgl1 used by python opencv
+# libglib2.0-0 used by python opencv
+RUN apt-get update && apt-get install -y \
+curl \
+libgl1 \
+libglib2.0-0
+
+USER 1000:1000
+
+# get dependencies for the whiteboard server, which uses nodjs javascript
+COPY package.json package-lock.json ./
+RUN npm ci --production
+COPY --chown=1000:1000 . .
+
+# get dependencies for the image transformation python script
+RUN cd xform && pipenv install
+
+ENV PORT=8080
+EXPOSE 8080
+
+VOLUME /opt/app/server-data
+
+CMD ["/bin/sh", "-c", "./start_server.sh"]

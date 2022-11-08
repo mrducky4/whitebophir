@@ -3,7 +3,7 @@ const fs   = require('fs');
 const log = require("./log.js").log;
 const rmsutil = require("./rmsutil.js");
 
-var CONFIG_FILENAME = process.env["WBO_CONFIG_FILENAME"] || '/opt/ava/config/robots.yaml';
+var CONFIG_FILENAME = process.env["WBO_CONFIG_FILENAME"] || '/opt/ava/config/robots.yml';
 var gRobotBoards = null;
 
 // Delay for the given number of msec
