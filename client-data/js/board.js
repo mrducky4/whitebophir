@@ -161,7 +161,7 @@ function setBoardScale(){
 // It seems the chromium browser in the robot doesn't like "async" keyword, it throws an
 // exception for this.
 async function onCaptureClick() {
-	console.log("MARKD capture clicked");
+	console.log("capture clicked");
 	Tools.send({type:"robotmessage", msg:"showmarkers"},"robotTool");
 	await delay(5000);
 	Tools.send({type:"robotmessage", msg:"showblack"},"robotTool");
@@ -687,7 +687,7 @@ Tools.logToServer = function (logobj) {
 Tools.pendingMessages = {};
 
 function messageForRobotTool(message) {
-	console.log("MARKD got robotTool msg", message);
+	console.log("got robotTool msg", message);
 	const m = message.msg;
 	const img = document.getElementById("fullimage");
 	if (m == "showblack") {
@@ -860,7 +860,7 @@ function resizeCanvas(m) {
 	//console.log("MARKD resizeCanvas");
 	if (x > Tools.svg.width.baseVal.value - 2000) {
 		Tools.svg.width.baseVal.value = Math.min(x + 2000, MAX_BOARD_SIZE);
-		console.log(`MARKD new svg width: ${Tools.svg.width.baseVal.value}`);
+		//console.log(`new svg width: ${Tools.svg.width.baseVal.value}`);
 	}
 	if (y > Tools.svg.height.baseVal.value - 2000) {
 		Tools.svg.height.baseVal.value = Math.min(y + 2000, MAX_BOARD_SIZE);
@@ -1077,7 +1077,7 @@ Tools.getOpacity = (function opacity() {
 //Scale the canvas on load
 //Tools.svg.width.baseVal.value = document.body.clientWidth;
 //Tools.svg.height.baseVal.value = document.body.clientHeight;
-console.log(`MARKD body.clientWidth: ${document.body.clientWidth}`);
+//console.log(`body.clientWidth: ${document.body.clientWidth}`);
 
 /**
  What does a "tool" object look like?

@@ -128,7 +128,7 @@ function checkUserPermission(url) {
 function handleRequest(request, response) {
   var parsedUrl = new URL(request.url, 'http://wbo/');
   var parts = parsedUrl.pathname.split("/");
-  log("MARKD request pathname", {url:parsedUrl.pathname});
+  log("request pathname", {url:parsedUrl.pathname});
 
   if (parts[0] === "") parts.shift();
 
@@ -258,6 +258,15 @@ function handleRequest(request, response) {
           response.setHeader("Content-Type", "application/javascript");
           response.end(bundleString);
         });
+      break;
+
+    case "config": // show configuration information
+      const configstring = robotBoardsMod.getRobotBoards().getConfigString();
+      response.writeHead(200, {
+        "Content-Type": "text/plain",
+        "Content-Length": configstring.length,
+      });
+      response.end(configstring);
       break;
 
     case "": // Index page

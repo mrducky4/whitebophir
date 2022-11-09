@@ -178,7 +178,6 @@ function handleSocketConnection(socket) {
       // don't need to send log messages to other users
       if (data.type === "robotmessage" && data.msg === "log") return;
       //Send data to all other users connected on the same board
-      //log("MARKD broadcast", {type: message.data.type});
       socket.broadcast.to(boardName).emit("broadcast", data);
     })
   );
