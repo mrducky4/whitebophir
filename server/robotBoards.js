@@ -4,6 +4,9 @@ const log = require("./log.js").log;
 const rmsutil = require("./rmsutil.js");
 
 var CONFIG_FILENAME = process.env["WBO_CONFIG_FILENAME"] || '/opt/ava/config/robots.yml';
+// suppress sending code to RMS, useful for testing with multiple servers using the same robot
+const sendCodeToRMS = process.env["WBO_SEND_CODE"] != 'no';
+
 var gRobotBoards = null;
 
 // Delay for the given number of msec
@@ -71,8 +74,35 @@ class robotBoards {
         } catch (e) {
             log(e);
         }
-        log('config loaded, rmsList', this.rmsList);
+        log('config loaded, rmsList', this.rmsListNoPw());
         log('config loaded, robotList', this.robotList);
+    }
+
+    /**
+     * 
+     * @returns list of RMS information, with password removed
+     */
+    rmsListNoPw() {
+        return this.rmsList.map(rms=>{
+            let rmsout = Object.assign({}, rms);
+            delete rmsout['pw'];
+            return rmsout;
+        });
+    }
+
+    /**
+     * 
+     * @returns string containing this object's configuration information
+     */
+    getConfigString() {
+        let s = JSON.stringify(this.rmsListNoPw());
+        s += '\n';
+        s += JSON.stringify(this.robotList);
+        s += '\n';
+        s += `sendCodeToRMS: ${sendCodeToRMS}`;
+        s += '\n';
+        s += `Configuration file: ${this.configFileName}`;
+        return s;
     }
 
     /**
@@ -136,11 +166,13 @@ class robotBoards {
                         if (!this.getBoardFromRobot(session.robot)){
                             const newCode = this.makeRandomCode();
                             this.addBoard(newCode, rms.rms, rms.user, rms.pw, session.robot);
-                            const args = {
-                                id: session.id,
-                                collaborationCode: newCode,
+                            if (sendCodeToRMS){
+                                const args = {
+                                    id: session.id,
+                                    collaborationCode: newCode,
+                                }
+                                rmsutil.rmsPost(rms, '/api/rms/setSession', args, true);
                             }
-                            rmsutil.rmsPost(rms, '/api/rms/setSession', args, true);
                         }
                     }
                 }

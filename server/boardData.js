@@ -189,7 +189,6 @@ class BoardData {
       default:
         //Add data
         if (!id) throw new Error("Invalid message: ", message);
-        //log("MARKD add to board", {type: message.type});
         this.set(id, message);
     }
   }
