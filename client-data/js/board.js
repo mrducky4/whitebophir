@@ -386,6 +386,8 @@ Tools.connect = function () {
 	var sockethost;
 	if (window.location.pathname.includes("/robotboards/"))
 		sockethost = window.location.pathname.split("/robotboards/")[0];
+	else if (window.location.pathname.includes("/test/"))
+		sockethost = window.location.pathname.split("/test/")[0];
 	else
 		sockethost = window.location.pathname.split("/boards/")[0];
 	var socket_params = {
