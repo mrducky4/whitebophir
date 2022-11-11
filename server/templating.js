@@ -81,4 +81,27 @@ class BoardTemplate extends Template {
   }
 }
 
-module.exports = { Template, BoardTemplate };
+/**
+ * Subclass for a template that has an "errorMessage" parameter.
+ */
+class IndexTemplate extends Template {
+  parameters(parsedUrl, request) {
+    const params = super.parameters(parsedUrl, request);
+    params["errorMessage"] = this.errorMsg;
+    return params;
+  }
+  /**
+   * Serve the page, but add an error message string.
+   * This still gives the normal 200 HTTP response code.
+   * @param {*} request 
+   * @param {*} response 
+   * @param {string} errorMsg 
+   */
+  serveError(request, response, errorMsg) {
+    this.errorMsg = errorMsg;
+    super.serve(request, response);
+    this.errorMsg = "";
+  }
+}
+
+module.exports = { Template, BoardTemplate, IndexTemplate };

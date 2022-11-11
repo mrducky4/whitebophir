@@ -92,7 +92,7 @@ const boardTemplate = new templating.BoardTemplate(
 const robotboardTemplate = new templating.BoardTemplate(
   path.join(config.WEBROOT, "robotboard.html")
 );
-const indexTemplate = new templating.Template(
+const indexTemplate = new templating.IndexTemplate(
   path.join(config.WEBROOT, "index.html")
 );
 
@@ -141,6 +141,7 @@ function handleRequest(request, response) {
 
   switch (parts[0]) {
     case "boards":
+    case "test":
       // "boards" refers to the root directory
       if (parts.length === 1) {
         // '/boards?board=...' This allows html forms to point to boards
@@ -149,9 +150,17 @@ function handleRequest(request, response) {
         response.writeHead(301, headers);
         response.end();
       } else if (parts.length === 2 && parsedUrl.pathname.indexOf(".") === -1) {
-        validateBoardName(parts[1]);
-        boardTemplate.serve(request, response);
         // If there is no dot and no directory, parts[1] is the board name
+        validateBoardName(parts[1]);
+        // Allow /test/boardname for testing without a robot
+        // For /boards/boardname, verify the boardname is a valid collab code
+        if (parts[0] == "test" || robotBoardsMod.getRobotBoards().getBoardFromCode(parts[1])) {
+          boardTemplate.serve(request, response);
+        } else {
+          log(`WARN request for invalid board ${parts[1]}`);
+          // send the main page, to prompt for a valid code
+          indexTemplate.serveError(request, response, "Please enter a valid code from the Ava Teleport App");
+        }
       } else {
         request.url = "/" + parts.slice(1).join("/");
         fileserver(request, response, serveError(request, response));

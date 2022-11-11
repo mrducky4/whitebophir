@@ -391,4 +391,12 @@ input[type=range]:focus::-ms-fill-upper {
 	border: none;
 	width: 0.85em;
 }
+
+#errorMessage{
+	left: 0 !important;
+	right: 0 !important; 
+	position: absolute; 
+	top: 32%; 
+	color: red; 
+}
 /*******************************************************/
