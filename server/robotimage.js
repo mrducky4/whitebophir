@@ -45,7 +45,7 @@ async function transformWhiteboardImage(boardRobotInfo) {
 function removeImageFiles(boardName) {
 	[
 		`client-data/${boardName}_snapshot_plain.jpg`,
-		`client-data/${boardName}_background_whiteboard.jpg`
+		`client-data/${boardName}_background_whiteboard.jpg`,
 		`xform/${boardName}_snapshot_markers.jpg`,
 		`xform/${boardName}_snapshot_whiteboard.jpg`,
 	].forEach(fileName=>{
