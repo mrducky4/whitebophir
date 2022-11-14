@@ -1,4 +1,4 @@
-const { getSnapshotMarkers, getSnapshotPlain, transformWhiteboardImage } = require("./robotimage.js")
+const { getSnapshotMarkers, getSnapshotPlain, transformWhiteboardImage, removeImageFiles } = require("./robotimage.js")
 const request = require('request-promise-native')
 const log = require("./log.js").log
 const robotBoardsMod = require('./robotBoards.js')
@@ -252,4 +252,19 @@ function handleRobotMsg(message, boardName, socket, io) {
     }
 }
 
-module.exports = { handleRobotMsg };
+/**
+ * The board has been invalidated, so tell the clients and remove board
+ * data from the server
+ * @param {string} boardName 
+ * @param {*} io 
+ */
+function boardInvalidated(boardName, io) {
+    // send to all clients
+    io.in(boardName).emit("broadcast", {
+        type:"robotmessage", msg:"boardInvalidated",
+        tool:"robotTool"
+    });
+    removeImageFiles(boardName);
+}
+
+module.exports = { handleRobotMsg, boardInvalidated };

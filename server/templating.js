@@ -59,7 +59,7 @@ class Template {
     var headers = {
       "Content-Length": Buffer.byteLength(body),
       "Content-Type": "text/html",
-      "Cache-Control": "public, max-age=3600",
+      "Cache-Control": "no-cache",
     };
     if (!parsedUrl.query.lang) {
       headers["Vary"] = "Accept-Language";

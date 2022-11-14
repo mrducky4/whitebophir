@@ -6,7 +6,7 @@ markers_filename="${boardcode}_snapshot_markers.jpg"
 wb_filename="${boardcode}_snapshot_whiteboard.jpg"
 out_filename="${boardcode}_background_whiteboard.jpg"
 
-rm -f client-data/background_whiteboard.jpg
+rm -f client-data/${out_filename}
 sleep 0.3
 ./get_snapshot.sh $1 $2 $3 $4 > "xform/${wb_filename}"
 

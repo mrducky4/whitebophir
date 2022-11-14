@@ -692,7 +692,7 @@ function messageForRobotTool(message) {
 	console.log("got robotTool msg", message);
 	const m = message.msg;
 	const img = document.getElementById("fullimage");
-	if (m == "showblack") {
+	if (m == "showblack" || (m == "boardInvalidated" && Tools.robotTools.isRobotBoard())) {
 		if (img) {
 			img.src = "black.png"
 			img.style.display = "block";
@@ -742,6 +742,9 @@ function messageForRobotTool(message) {
 		} else {
 			alert("Could not capture the image.");
 		}
+	}
+	if (m == "boardInvalidated" && !Tools.robotTools.isRobotBoard()) {
+		window.location = '/';
 	}
 }
 

@@ -25,7 +25,7 @@
  * @module boardData
  */
 
-const { handleRobotMsg } = require("./robotmsg.js");
+const { handleRobotMsg, boardInvalidated } = require("./robotmsg.js");
 
 var fs = require("./fs_promises.js"),
   log = require("./log.js").log,
@@ -306,6 +306,16 @@ class BoardData {
         this.validate(item._children[i]);
       }
     }
+  }
+
+  /**
+   * The board has been invalidated, so tell the clients and remove board
+   * data from the server
+   * @param {*} io 
+   */
+  invalidateBoard(io){
+    this.deleteall();
+    boardInvalidated(this.name, io);
   }
 
   /** Load the data in the board from a file.
