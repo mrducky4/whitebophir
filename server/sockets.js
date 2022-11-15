@@ -2,7 +2,8 @@ var iolib = require("socket.io"),
   { log, gauge, monitorFunction } = require("./log.js"),
   BoardData = require("./boardData.js").BoardData,
   config = require("./configuration"),
-  jsonwebtoken = require("jsonwebtoken");
+  jsonwebtoken = require("jsonwebtoken"),
+  robotBoardsMod = require('./robotBoards.js');
 
 /** Map from name to *promises* of BoardData
   @type {{[boardName: string]: Promise<BoardData>}}
@@ -47,6 +48,7 @@ function startIO(app) {
     });
   }
   io.on("connection", noFail(handleSocketConnection));
+  robotBoardsMod.getRobotBoards().registerInvalidateCb(boardInvalidated);
   return io;
 }
 
@@ -236,6 +238,16 @@ function generateUID(prefix, suffix) {
   if (prefix) uid = prefix + uid;
   if (suffix) uid = uid + suffix;
   return uid;
+}
+
+/**
+ * callback, to be invoked from the robotBoards object
+ * @param {string} boardName 
+ */
+async function boardInvalidated(boardName) {
+  log(`invalidate board ${boardName}`);
+  let boardData = await getBoard(boardName);
+  boardData.invalidateBoard(globalio);
 }
 
 if (exports) {

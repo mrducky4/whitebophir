@@ -47,7 +47,23 @@ class robotBoards {
         this.configFileName = CONFIG_FILENAME;
         this.pollInterval = 5000; // RMS polling interval in msec
         this.enablePoll = true;
+        this.invalidateCb = null;
+        this.logTime = 0;
         log('created robotBoards');
+    }
+
+    /**
+     * suppress log messages, just log one every minute.
+     * TODO support different categories, so each category is throttled
+     * TODO separately. Maybe move to the log source file.
+     * @param  {...any} args 
+     */
+    logThrottled(...args) {
+        const now = Date.now();
+        if (now - this.logTime > 60000) {
+            this.logTime = now;
+            log(...args);
+        }
     }
 
     /**
@@ -135,7 +151,10 @@ class robotBoards {
         // Remove boards for the given RMS if the robot is not in session
         this.boardList = this.boardList.filter(board => {
             let keep = board.rms != rms || robotsInSession.includes(board.robot);
-            if (!keep) log(`Removing board for ${board.robot} on ${rms} with code ${board.code}`);
+            if (!keep) {
+                log(`Removing board for ${board.robot} on ${rms} with code ${board.code}`);
+                if (this.invalidateCb) this.invalidateCb(board.code);
+            }
             return keep;
         });
     }
@@ -147,7 +166,7 @@ class robotBoards {
      */
     async pollOnceRMS(rms) {
         try{
-            log(`query RMS ${rms.rms} for sessions`);
+            this.logThrottled(`query RMS ${rms.rms} for sessions`);
             const args = {
                 startTime: Date.now(),
                 endTime: Date.now() + 10000
@@ -222,6 +241,10 @@ class robotBoards {
             log(`no board for robot ${robot}`);
         }
         return board;
+    }
+
+    registerInvalidateCb(cb) {
+        this.invalidateCb = cb;
     }
 
     /**

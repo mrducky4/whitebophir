@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { exec } = require("child_process");
 /**
  * just for testing how to run external process
@@ -41,4 +42,15 @@ async function transformWhiteboardImage(boardRobotInfo) {
 	});
 }
 
-module.exports = { pwd, getSnapshotMarkers, getSnapshotPlain, transformWhiteboardImage };
+function removeImageFiles(boardName) {
+	[
+		`client-data/${boardName}_snapshot_plain.jpg`,
+		`client-data/${boardName}_background_whiteboard.jpg`,
+		`xform/${boardName}_snapshot_markers.jpg`,
+		`xform/${boardName}_snapshot_whiteboard.jpg`,
+	].forEach(fileName=>{
+		fs.unlink(fileName, (err)=>{}); //ignore errors
+	});
+}
+
+module.exports = { pwd, getSnapshotMarkers, getSnapshotPlain, transformWhiteboardImage, removeImageFiles };
