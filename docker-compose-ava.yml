@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+    nginx-proxy:
+        image: jwilder/nginx-proxy
+        ports:
+            - "443:443"
+        restart: always
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+            - /opt/ava/certs:/etc/nginx/certs
+
+    collab:
+        image: avarobotics/collab
+        ports:
+            - "8080:8080"
+        restart: always
+        volumes:
+            - /opt/ava/wbo_boards:/opt/app/server-data
+            - /opt/ava/config:/opt/ava/config
+            - /var/log/ava:/var/log/ava
+        environment:
+            - VIRTUAL_HOST=collab.ava8.net

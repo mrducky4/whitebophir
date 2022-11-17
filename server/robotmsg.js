@@ -105,7 +105,7 @@ async function handleProjectorMode(boardRobotInfo, mode, boardName, socket) {
     if (restartRobotBrowser) {
         if (boardRobotInfo) {
             let serverhost = socket.request.headers.host;
-            const boardUrl = {url:`http://${serverhost}/robotboards/${boardRobotInfo.code}`};
+            const boardUrl = {url:`https://${serverhost}/robotboards/${boardRobotInfo.code}`};
             await rmsPostRobot(boardRobotInfo, '/robot/browser/restart', boardUrl, true);
         }
         // wait for restart, then clear the black default image
