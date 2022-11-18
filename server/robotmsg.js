@@ -12,6 +12,8 @@ const zoomStation = 3;
 
 const delay = t => new Promise(resolve => setTimeout(resolve, t));
 
+var robotProjectorState = {}; //key is robotID, value is projector mode
+
 /**
  * POST a robot API command, via RMS proxy.
  * 
@@ -98,6 +100,9 @@ async function handleProjectorMode(boardRobotInfo, mode, boardName, socket) {
         args.tilt = "down";
         restartRobotBrowser = true;
     }
+    // remember the current mode
+    robotProjectorState[boardRobotInfo.robot] = mode;
+    
     await rmsPostRobot(boardRobotInfo, '/robot/torso/set', args, true);
     // If we're going to project, then brute force restart the robot's
     // browser as a safeguard against it getting stuck without a connection
@@ -110,6 +115,8 @@ async function handleProjectorMode(boardRobotInfo, mode, boardName, socket) {
         }
         // wait for restart, then clear the black default image
         delay(3000).then(()=>{
+            // if user went back home in the meantime, skip this
+            if (robotProjectorState[boardRobotInfo.robot] == 'home') return;
             socket.broadcast.to(boardName).emit("broadcast", {
                 type:"robotmessage", msg:"clearoverlay", tool:"robotTool"
             });
@@ -119,6 +126,8 @@ async function handleProjectorMode(boardRobotInfo, mode, boardName, socket) {
                 });
             // do it again in case the robot browser was slow to restart
             delay(3000).then(()=>{
+               // if user went back home in the meantime, skip this
+                if (robotProjectorState[boardRobotInfo.robot] == 'home') return;
                 socket.broadcast.to(boardName).emit("broadcast", {
                    type:"robotmessage", msg:"clearoverlay", tool:"robotTool"
                 });
