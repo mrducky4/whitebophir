@@ -398,10 +398,17 @@ circle.opcursor {
 }*/
 .homePageButtons{
 	height: 6em;
-} 
+}
+.homePageButtons:disabled{
+	opacity: 0.5;
+}
+
 .boardButtons{
 	height: 3em;
 	width: 10%;
+} 
+.boardButtons:disabled{
+	opacity: 0.5;
 } 
 
 .lang-selector li:hover {

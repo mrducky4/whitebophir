@@ -133,18 +133,22 @@ function onTogglePageClick(e) {
 		console.log("Show board");
 		document.getElementById("avaLogoPageContainer").style.display = "none";
 		document.getElementById("boardContainer").style.display = "grid";
-		
+		const buttonCapture = document.getElementById("buttonCapture");
 		if (id === "collabWhiteboard") {
 			mode = "whiteboard";
 			Tools.robotTools.whiteboard_mode = true;
 			showKeepout = true;
-			document.getElementById("buttonCapture").innerHTML = 'Capture';
+			buttonCapture.innerHTML = 'Capture';
 		} else {
 			mode = "station"
 			Tools.robotTools.whiteboard_mode = false;
 			showKeepout = false;
-			document.getElementById("buttonCapture").innerHTML = 'Snapshot';
+			buttonCapture.innerHTML = 'Snapshot';
 		}
+		// Wait for the robot's client app to be reloaded and stable before
+		// allowing the user to capture the whiteboard snapshot
+		buttonCapture.disabled = true;
+		delay(6000).then(()=>buttonCapture.disabled=false);
 	}
 	Tools.robotTools.cameraPreset(mode);
 	Tools.robotTools.projectorMode(mode);
