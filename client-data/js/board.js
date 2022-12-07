@@ -146,9 +146,11 @@ function onTogglePageClick(e) {
 			buttonCapture.innerHTML = 'Snapshot';
 		}
 		// Wait for the robot's client app to be reloaded and stable before
-		// allowing the user to capture the whiteboard snapshot
+		// allowing the user to capture the whiteboard snapshot. This delay should be
+		// longer than the delay on the server side that sends "showkeepout" after
+		// restarting the robot's browser.
 		buttonCapture.disabled = true;
-		delay(6000).then(()=>buttonCapture.disabled=false);
+		delay(8000).then(()=>buttonCapture.disabled=false);
 	}
 	Tools.robotTools.cameraPreset(mode);
 	Tools.robotTools.projectorMode(mode);
@@ -180,6 +182,8 @@ function onCaptureClick() {
 	} else{
 		startPlainSnapshot();
 	}
+	// disable the button so we have only one capture pending at a time.
+	document.getElementById("buttonCapture").disabled = true;
 }
 
 function getWbSnapshot(){
@@ -738,6 +742,8 @@ function messageForRobotTool(message) {
 			removeWhiteboardSnapshot();
 			alert("Could not capture the whiteboard.");
 		}
+		// Capture sequence is done, so enable the button again
+		delay(1000).then(()=>document.getElementById("buttonCapture").disabled=false);
 	}
 	if (m == "plaincaptured" && !Tools.robotTools.isRobotBoard()) {
 		toggleLoadingImg(false);
@@ -746,6 +752,8 @@ function messageForRobotTool(message) {
 		} else {
 			alert("Could not capture the image.");
 		}
+		// Capture sequence is done, so enable the button again
+		delay(1000).then(()=>document.getElementById("buttonCapture").disabled=false);
 	}
 	if (m == "boardInvalidated" && !Tools.robotTools.isRobotBoard()) {
 		window.location = '/';
